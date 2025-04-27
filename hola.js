@@ -10,7 +10,7 @@ var edad = 32;
 let nombreAlumno = "Manuel"
 
 const PI = 3.14
-PI = 4
+//PI = 4
 
 // ARRAY (LISTA)
 const NUMEROS = [1,2,3,4,5]
