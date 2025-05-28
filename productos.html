@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catálogo | Cabaña La Esperanza</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1>Catálogo</h1>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Catálogo</a>
+      <a href="carrito.html">Carrito</a>
+    </nav>
+  </header>
+  <main class="productos">
+    <!-- 🔽 Acá podés duplicar bloques .producto para agregar más vacas -->
+    <div class="producto">
+      <img src="img/vaca1.jpg" alt="Vaca Angus" />
+      <h3>Vaca Angus</h3>
+      <p>$2500</p>
+      <button onclick="agregarAlCarrito('Vaca Angus', 2500)">Agregar al carrito</button>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
