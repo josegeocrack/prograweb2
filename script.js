@@ -1,11 +1,20 @@
-function agregarAlCarrito(nombre, precio) {
-  let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-  carrito.push({ nombre, precio });
-  localStorage.setItem('carrito', JSON.stringify(carrito));
-  alert(`${nombre} agregado al carrito.`);
-}
+// script.js
 
 document.addEventListener('DOMContentLoaded', () => {
+  const botones = document.querySelectorAll('.agregar');
+
+  botones.forEach(boton => {
+    boton.addEventListener('click', () => {
+      const nombre = boton.getAttribute('data-nombre');
+      const precio = parseFloat(boton.getAttribute('data-precio'));
+
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      carrito.push({ nombre, precio });
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+      alert(`${nombre} agregado al carrito.`);
+    });
+  });
+
   const lista = document.getElementById('listaCarrito');
   if (lista) {
     const carrito = JSON.parse(localStorage.getItem('carrito')) || [];

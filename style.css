@@ -1,3 +1,4 @@
+/* style.css */
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
@@ -41,19 +42,46 @@ nav a {
   padding: 2rem;
 }
 
-.producto {
-  background: white;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  width: 220px;
-  text-align: center;
-  border-radius: 8px;
+.producto-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
 }
 
-.producto img {
+.producto-card:hover {
+  transform: scale(1.02);
+}
+
+.producto-card img {
   width: 100%;
-  height: auto;
-  border-radius: 6px;
+  height: 180px;
+  object-fit: cover;
+}
+
+.info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.info .raza {
+  font-size: 0.9rem;
+  color: #4caf50;
+  display: block;
+}
+
+.info h3 {
+  margin: 0.5rem 0;
+}
+
+.precio {
+  font-size: 1.1rem;
+  color: #1b5e20;
+  margin-bottom: 0.5rem;
 }
 
 button {
@@ -80,3 +108,4 @@ button:hover {
     align-items: center;
   }
 }
+

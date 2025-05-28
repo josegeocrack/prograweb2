@@ -1,10 +1,12 @@
+
+<!-- productos.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo | Cabaña La Esperanza</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
@@ -16,14 +18,17 @@
     </nav>
   </header>
   <main class="productos">
-    <!-- 🔽 Acá podés duplicar bloques .producto para agregar más vacas -->
-    <div class="producto">
-      <img src="img/vaca1.jpg" alt="Vaca Angus" />
-      <h3>Vaca Angus</h3>
-      <p>$2500</p>
-      <button onclick="agregarAlCarrito('Vaca Angus', 2500)">Agregar al carrito</button>
+    <div class="producto-card">
+      <img src="img/vaca1.jpg" alt="Vaca Angus">
+      <div class="info">
+        <span class="raza">🐄 Vaca Angus</span>
+        <h3>Vaca Angus</h3>
+        <p class="precio">$2500</p>
+        <button class="agregar" data-nombre="Vaca Angus" data-precio="2500">Agregar al carrito</button>
+      </div>
     </div>
   </main>
   <script src="script.js"></script>
 </body>
 </html>
+
