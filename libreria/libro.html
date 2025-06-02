@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Librería Don Bartolo</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+  const libros = [
+  {
+    id: 1,
+    titulo: "Cien años de soledad",
+    autor: "Gabriel García Márquez",
+    precio: 4500,
+    sinopsis: "Una saga familiar en el mítico pueblo de Macondo que atraviesa generaciones de soledad, magia y destino.",
+    imagen: "https://upload.wikimedia.org/wikipedia/en/0/0b/Cien_a%C3%B1os_de_soledad_%28book_cover%29.jpg"
+  },
+  {
+    id: 2,
+    titulo: "1984",
+    autor: "George Orwell",
+    precio: 3900,
+    sinopsis: "Una novela distópica sobre un futuro totalitario donde el Gran Hermano lo vigila todo.",
+    imagen: "https://upload.wikimedia.org/wikipedia/en/c/c3/1984first.jpg"
+  },
+  {
+    id: 3,
+    titulo: "Orgullo y prejuicio",
+    autor: "Jane Austen",
+    precio: 4100,
+    sinopsis: "Una historia de amor, orgullo y clase social en la Inglaterra georgiana.",
+    imagen: "https://upload.wikimedia.org/wikipedia/commons/8/8e/PrideAndPrejudiceTitlePage.jpg"
+  },
+  {
+    id: 4,
+    titulo: "El Principito",
+    autor: "Antoine de Saint-Exupéry",
+    precio: 3700,
+    sinopsis: "Una fábula filosófica disfrazada de cuento infantil, sobre la vida, el amor y la esencia de las cosas.",
+    imagen: "https://upload.wikimedia.org/wikipedia/en/0/05/Littleprince.JPG"
+  }
+];
+
+  function actualizarContador() {
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    document.getElementById("contador-carrito").textContent = carrito.length;
+  }
+
+  function agregarAlCarrito(id) {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+    carrito.push(id);
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    actualizarContador();
+  }
+
+  actualizarContador();
+
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get("id"));
+  const libro = libros.find(l => l.id === id);
+
+  const contenedor = document.getElementById("detalle-libro");
+
+  if (libro) {
+    contenedor.innerHTML = `
+      <div class="libro-detalle">
+        <img src="${libro.imagen}" alt="${libro.titulo}">
+        <h2>${libro.titulo}</h2>
+        <p><strong>Autor:</strong> ${libro.autor}</p>
+        <p><strong>Precio:</strong> $${libro.precio}</p>
+        <p><strong>Sinopsis:</strong> ${libro.sinopsis}</p>
+        <button onclick="agregarAlCarrito(${libro.id})">Agregar al carrito</button>
+      </div>
+    `;
+  } else {
+    contenedor.innerHTML = "<p>Libro no encontrado.</p>";
+  }
+</script>
+</head>
+<body>
+  <header class="main-header">
+    <h1 class="logo">Librería Don Bartolo</h1>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="carrito.html" class="carrito-link">
+        🛒 Carrito (<span id="contador-carrito">0</span>)
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="detalle-libro" id="detalle-libro">
+      <!-- Se completa con JS -->
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <p>&copy; 2025 Librería Don Bartolo - Todos los derechos reservados</p>
+  </footer>
+
+  
+  <script>
+    actualizarContador();
+
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get("id"));
+    const libro = libros.find(l => l.id === id);
+
+    const contenedor = document.getElementById("detalle-libro");
+
+    if (libro) {
+      contenedor.innerHTML = `
+        <div class="libro-detalle">
+          <img src="${libro.imagen}" alt="${libro.titulo}">
+          <h2>${libro.titulo}</h2>
+          <p><strong>Autor:</strong> ${libro.autor}</p>
+          <p><strong>Precio:</strong> $${libro.precio}</p>
+          <p><strong>Sinopsis:</strong> ${libro.sinopsis}</p>
+          <button onclick="agregarAlCarrito(${libro.id})">Agregar al carrito</button>
+        </div>
+      `;
+    } else {
+      contenedor.innerHTML = "<p>Libro no encontrado.</p>";
+    }
+  </script>
+</body>
+</html>

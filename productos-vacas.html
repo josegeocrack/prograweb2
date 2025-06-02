@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<!-- <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -34,5 +34,34 @@
           </div>
   </main>
   <script src="script.js"></script>
+</body>
+</html> -->
+
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vacas | Cabaña La Esperanza</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="top-bar">
+    <a href="index.html">⬅ Volver</a>
+    <h2>Vacas disponibles</h2>
+  </header>
+  <main class="productos">
+    <div class="filtros">
+      <label for="filtroPrecio">Filtrar por precio:</label>
+      <select id="filtroPrecio" onchange="filtrarProductos('vacas')">
+        <option value="todos">Todos</option>
+        <option value="<3000">Menos de $3000</option>
+        <option value=">3000">Más de $3000</option>
+      </select>
+    </div>
+    <div id="lista-vacas" class="producto-grid">
+      <!-- Productos se cargan por JS -->
+    </div>
+  </main>
 </body>
 </html>

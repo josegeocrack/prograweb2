@@ -112,4 +112,44 @@ nav a {
     flex-direction: column;
     text-align: center;
   }
+
+.mensaje-carrito {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background-color: #2e7d32;
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+  font-weight: bold;
+  animation: aparecer 0.3s ease;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#listaCarrito li {
+  margin-bottom: 0.5rem;
+  list-style: none;
+  font-size: 1.1rem;
+}
+
+#listaCarrito button {
+  margin-left: 1rem;
+  padding: 0.3rem 0.8rem;
+  background-color: #c62828;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#listaCarrito button:hover {
+  background-color: #b71c1c;
+}
+
 }

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - Libreria Don Bartolome</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="main-header">
+    <h1 class="logo">Libreria Don Bartolome</h1>
+    <nav class="main-nav">
+      <a href="index.html">Inicio</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+      <a href="carrito.html" class="carrito-link">
+        🛒 Carrito (<span id="contador-carrito">0</span>)
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="carrito">
+      <h2>Tu carrito</h2>
+      <ul id="lista-carrito" class="lista-carrito"></ul>
+      <p id="total">Total: $0</p>
+      <button onclick="vaciarCarrito()">Vaciar carrito</button>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <p>&copy; 2025 Libreria Don Bartolome - Todos los derechos reservados</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    const listaCarrito = document.getElementById("lista-carrito");
+    const total = document.getElementById("total");
+
+    function renderCarrito() {
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      listaCarrito.innerHTML = "";
+      let suma = 0;
+      carrito.forEach((id, index) => {
+        const libro = libros.find(l => l.id === id);
+        if (libro) {
+          suma += libro.precio;
+          const li = document.createElement("li");
+          li.innerHTML = `${libro.titulo} - $${libro.precio} <button onclick="eliminarDelCarrito(${index})">Eliminar</button>`;
+          listaCarrito.appendChild(li);
+        }
+      });
+      total.textContent = `Total: $${suma}`;
+      actualizarContador();
+    }
+
+    function eliminarDelCarrito(indice) {
+      let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      carrito.splice(indice, 1);
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+      renderCarrito();
+    }
+
+    function vaciarCarrito() {
+      localStorage.removeItem("carrito");
+      renderCarrito();
+    }
+
+    renderCarrito();
+  </script>
+</body>
+</html>

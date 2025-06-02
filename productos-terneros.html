@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<!-- <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -26,7 +26,7 @@
       <button class="agregar" data-nombre="Ternero Angus" data-precio="1900">Agregar al carrito</button>
     </div>
 
-    <!-- <div class="producto-card">
+    <div class="producto-card">
       <img src="img/tehereford.jpg" alt="Ternero Hereford" />
       <img src="img/ternero2.jpg" alt="Ternero Braford" />
       <h3>Ternero Braford</h3>
@@ -34,7 +34,7 @@
       <button class="agregar" data-nombre="Ternero Braford" data-precio="1900">Agregar al carrito</button>
     </div> -->
 
-    <div class="producto-card">
+    <!-- <div class="producto-card">
       <img src="img/tehereford.jpg" alt="Ternero Hereford" />
       <h3>Ternero Hereford</h3>
       <p>$1750</p>
@@ -42,5 +42,34 @@
     </div>
   </main>
   <script src="script.js"></script>
+</body>
+</html>  -->
+
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terneros | Cabaña La Esperanza</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="top-bar">
+    <a href="index.html">⬅ Volver</a>
+    <h2>Terneros disponibles</h2>
+  </header>
+  <main class="productos">
+    <div class="filtros">
+      <label for="filtroPrecio">Filtrar por precio:</label>
+      <select id="filtroPrecio" onchange="filtrarProductos('terneros')">
+        <option value="todos">Todos</option>
+        <option value="<1800">Menos de $1800</option>
+        <option value=">1800">Más de $1800</option>
+      </select>
+    </div>
+    <div id="lista-terneros" class="producto-grid">
+      <!-- Productos se cargan por JS -->
+    </div>
+  </main>
 </body>
 </html>
