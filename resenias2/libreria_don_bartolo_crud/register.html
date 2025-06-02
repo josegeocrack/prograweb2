@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrarse - Librería Don Bartolo</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .center-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: 8rem auto;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="center-box">
+    <h2>Crear cuenta</h2>
+    <form id="registro-form">
+      <input type="text" id="nuevo-usuario" placeholder="Nombre de usuario" required>
+      <input type="email" id="nuevo-email" placeholder="Correo electrónico" required>
+      <input type="password" id="nuevo-password" placeholder="Contraseña" required>
+      <button class="btn" type="submit">Registrarse</button>
+    </form>
+    <p>¿Ya tenés cuenta? <a href="login.html">Iniciar sesión</a></p>
+  </div>
+  <script>
+    document.getElementById("registro-form").addEventListener("submit", e => {
+      e.preventDefault();
+      const username = document.getElementById("nuevo-usuario").value;
+      localStorage.setItem("username", username);
+      localStorage.setItem("loggedIn", "true");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
