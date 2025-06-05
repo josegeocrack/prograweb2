@@ -1,99 +1,322 @@
 <!DOCTYPE html>
-<!-- <html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio | Agropecuaria  Don Bartolomé S.A</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="top-bar">
-    <span><a href="mailto:contacto@cabaniaesperanza.com">📧 contacto@cabaniaesperanza.com</a></span>
-    <span><a href="carrito.html">🛒 Ver carrito</a></span>
-  </div>
-  <header>
-    <div class="container">
-      <h1>Cabaña La Esperanza</h1>
-      <nav>
-        <a href="index.html">Inicio</a>
-        <a href="productos-toros.html">Toros</a>
-        <a href="productos-vacas.html">Vacas</a>
-        <a href="productos-terneros.html">Terneros</a>
-      </nav>
-    </div>
-  </header>
-  <main>
-    <section class="hero-img">
-      <img src="img/campooo.avif" alt="Campo agropecuario">
-    </section>
-    <section class="categorias">
-      <h2>Categorías de Productos</h2>
-      <div class="categoria-grid">
-        <a href="productos-toros.html" class="categoria">
-          <img src="img/toro.jpeg" alt="Toros">
-          <h3>Toros</h3>
-        </a>
-        <a href="productos-vacas.html" class="categoria">
-          <img src="img/vaca.jpg" alt="Vacas">
-          <h3>Vacas</h3>
-        </a>
-        <a href="productos-terneros.html" class="categoria">
-          <img src="img/ternero.jpg" alt="Terneros">
-          <h3>Terneros</h3>
-        </a>
-      </div>
-    </section>
-  </main>
-</body>
-</html> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookReview - Share Your Reading Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio | Cabaña La Esperanza</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="top-bar">
-    <span><a href="mailto:contacto@cabaniaesperanza.com">📧 contacto@cabaniaesperanza.com</a></span>
-    <span><a href="carrito.html">🛒 Ver carrito</a></span>
-  </div>
-  <header>
-    <div class="container">
-      <h1>Cabaña La Esperanza</h1>
-      <nav>
-        <a href="index.html">Inicio</a>
-        <a href="productos-toros.html">Toros</a>
-        <a href="productos-vacas.html">Vacas</a>
-        <a href="productos-terneros.html">Terneros</a>
-      </nav>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" id="logo-home">BookReview</div>
+            <ul class="nav-links">
+                <li><a href="#" data-view="home" class="nav-link active">Home</a></li>
+                <li><a href="#" data-view="genres" class="nav-link">Genres</a></li>
+                <li><a href="#" data-view="my-reviews" class="nav-link">My Reviews</a></li>
+                <li><a href="#" data-view="saved-reviews" class="nav-link">Saved Reviews</a></li>
+                <li><a href="#" data-view="profile" class="nav-link">Profile</a></li>
+            </ul>
+            <div class="user-actions">
+                <span id="user-name" style="display: none;"></span>
+                <button id="login-btn" class="btn btn-primary">Login</button>
+                <button id="logout-btn" class="btn btn-secondary" style="display: none;">Logout</button>
+                <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li><a href="#" data-view="home" class="mobile-nav-link active">Home</a></li>
+            <li><a href="#" data-view="genres" class="mobile-nav-link">Genres</a></li>
+            <li><a href="#" data-view="my-reviews" class="mobile-nav-link">My Reviews</a></li>
+            <li><a href="#" data-view="saved-reviews" class="mobile-nav-link">Saved Reviews</a></li>
+            <li><a href="#" data-view="profile" class="mobile-nav-link">Profile</a></li>
+        </ul>
+    </nav>
+
+    <!-- Landing View -->
+    <div id="landing-view" class="view active">
+        <div class="landing-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to BookReview</h1>
+                <p class="hero-subtitle">Share your reading experiences and discover your next favorite book</p>
+                <div class="hero-features">
+                    <div class="feature">
+                        <div class="feature-icon">📚</div>
+                        <h3>Review Books</h3>
+                        <p>Share detailed reviews with ratings and photos</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Discover</h3>
+                        <p>Find new books through community reviews</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">💾</div>
+                        <h3>Save Favorites</h3>
+                        <p>Bookmark reviews and build your reading list</p>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn btn-primary btn-large" onclick="showView('signup')">Get Started</button>
+                    <button class="btn btn-secondary btn-large" onclick="showView('login')">Sign In</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="landing-about">
+            <div class="container">
+                <h2>About BookReview</h2>
+                <p>BookReview is a community-driven platform where book lovers come together to share their thoughts, discover new reads, and connect through the power of literature. Whether you're a casual reader or a literary enthusiast, our platform helps you track your reading journey and find your next great book.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-reviews">0</div>
+                        <div class="stat-label">Total Reviews</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-users">0</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Genres</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </header>
-  <main>
-    <section class="hero-img">
-      <img src="img/campooo.avif" alt="Campo agropecuario">
-    </section>
-    <section class="categorias">
-      <h2>Categorías de Productos</h2>
-      <div class="categoria-grid">
-        <a href="productos-toros.html" class="categoria">
-          <img src="img/toro.jpeg" alt="Toros">
-          <h3>Toros</h3>
-        </a>
-        <a href="productos-vacas.html" class="categoria">
-          <img src="img/vaca.jpg" alt="Vacas">
-          <h3>Vacas</h3>
-        </a>
-        <a href="productos-terneros.html" class="categoria">
-          <img src="img/ternero.jpg" alt="Terneros">
-          <h3>Terneros</h3>
-        </a>
-      </div>
-    </section>
-  </main>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Login View -->
+            <div id="login-view" class="view">
+                <div class="auth-container">
+                    <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">Welcome Back</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1.5rem;">Login</button>
+                    </form>
+                    <p style="text-align: center; color: var(--text-light);">
+                        Don't have an account? 
+                        <a href="#" id="show-signup" style="color: var(--primary); font-weight: 500;">Sign up</a>
+                    </p>
+                    <p style="text-align: center; margin-top: 1.5rem;">
+                        <a href="#" id="back-to-landing" style="color: var(--text-light); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <span style="font-size: 1.2rem;">←</span> Back to Home
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Signup View -->
+            <div id="signup-view" class="view">
+                <div class="auth-container">
+                    <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">Join BookReview</h2>
+                    <form id="signup-form">
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" id="signup-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email</label>
+                            <input type="email" id="signup-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1.5rem;">Create Account</button>
+                    </form>
+                    <p style="text-align: center; color: var(--text-light);">
+                        Already have an account? 
+                        <a href="#" id="show-login" style="color: var(--primary); font-weight: 500;">Login</a>
+                    </p>
+                    <p style="text-align: center; margin-top: 1.5rem;">
+                        <a href="#" id="back-to-landing-signup" style="color: var(--text-light); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <span style="font-size: 1.2rem;">←</span> Back to Home
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Home View -->
+            <div id="home-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Latest Book Reviews</h1>
+                    <p class="page-subtitle">Discover what others are reading and share your thoughts on your favorite books</p>
+                </div>
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-genre="all">All</button>
+                    <button class="filter-btn" data-genre="Fiction">Fiction</button>
+                    <button class="filter-btn" data-genre="Mystery">Mystery</button>
+                    <button class="filter-btn" data-genre="Romance">Romance</button>
+                    <button class="filter-btn" data-genre="Sci-Fi">Sci-Fi</button>
+                    <button class="filter-btn" data-genre="Non-Fiction">Non-Fiction</button>
+                </div>
+                <div id="reviews-container" class="reviews-grid"></div>
+            </div>
+
+            <!-- Genres View -->
+            <div id="genres-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Browse by Genre</h1>
+                    <p class="page-subtitle">Explore reviews by your favorite genres and discover new books to read</p>
+                </div>
+                <div class="genres-grid">
+                    <div class="genre-card" data-genre="Fiction" style="background-image: url('https://images.unsplash.com/photo-1513001900722-370f803f498d?auto=format&fit=crop&q=80');">
+                        <h3>Fiction</h3>
+                        <p>Literary works and novels</p>
+                    </div>
+                    <div class="genre-card" data-genre="Mystery" style="background-image: url('https://images.unsplash.com/photo-1587876931567-564ce588bfbd?auto=format&fit=crop&q=80');">
+                        <h3>Mystery</h3>
+                        <p>Thrillers and detective stories</p>
+                    </div>
+                    <div class="genre-card" data-genre="Romance" style="background-image: url('https://images.unsplash.com/photo-1474552226712-ac0f0961a954?auto=format&fit=crop&q=80');">
+                        <h3>Romance</h3>
+                        <p>Love stories and relationships</p>
+                    </div>
+                    <div class="genre-card" data-genre="Sci-Fi" style="background-image: url('https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&q=80');">
+                        <h3>Sci-Fi</h3>
+                        <p>Science fiction and fantasy</p>
+                    </div>
+                    <div class="genre-card" data-genre="Non-Fiction" style="background-image: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80');">
+                        <h3>Non-Fiction</h3>
+                        <p>Biographies and educational</p>
+                    </div>
+                    <div class="genre-card" data-genre="Biography" style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80');">
+                        <h3>Biography</h3>
+                        <p>Life stories and memoirs</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Reviews View -->
+            <div id="my-reviews-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">My Reviews</h1>
+                    <p class="page-subtitle">Manage your book reviews and share your reading experiences</p>
+                </div>
+                <div id="my-reviews-container" class="reviews-grid"></div>
+            </div>
+
+            <!-- Saved Reviews View -->
+            <div id="saved-reviews-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Saved Reviews</h1>
+                    <p class="page-subtitle">Reviews you've bookmarked for future reference</p>
+                </div>
+                <div id="saved-reviews-container" class="reviews-grid"></div>
+            </div>
+
+            <!-- Profile View -->
+            <div id="profile-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Profile</h1>
+                    <p class="page-subtitle">Manage your account settings and preferences</p>
+                </div>
+                <div class="auth-container">
+                    <div id="profile-info"></div>
+                    <button class="btn btn-danger" id="delete-account" style="width: 100%; margin-top: 2rem;">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Review Button -->
+    <button class="add-review-btn" id="add-review-btn" style="display: none;">+</button>
+
+    <!-- Review Modal -->
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Review</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <form id="review-form">
+                <div class="form-group">
+                    <label for="book-title">Book Title</label>
+                    <input type="text" id="book-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="book-genre">Genre</label>
+                    <select id="book-genre" required>
+                        <option value="">Select Genre</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Sci-Fi">Sci-Fi</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Biography">Biography</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="book-rating">Rating</label>
+                    <div id="rating-stars" class="star-rating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <input type="hidden" id="book-rating" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="review-text">Review</label>
+                    <textarea id="review-text" rows="5" required></textarea>
+                </div>
+                
+                <!-- Photo Upload Section -->
+                <div class="photo-upload-section">
+                    <label>Book Cover</label>
+                    <div class="upload-options">
+                        <div class="upload-option active" data-option="upload">📷 Upload Photo</div>
+                        <div class="upload-option" data-option="url">🔗 Use URL</div>
+                    </div>
+                    
+                    <div id="upload-area" class="file-upload-area">
+                        <div class="upload-icon">📚</div>
+                        <div class="upload-text">
+                            <strong>Click to upload</strong> or drag and drop<br>
+                            <small>PNG, JPG, GIF up to 5MB</small>
+                        </div>
+                        <input type="file" id="book-cover-file" class="file-input" accept="image/*">
+                    </div>
+                    
+                    <div id="url-area" class="form-group" style="display: none;">
+                        <input type="url" id="book-cover-url" placeholder="https://example.com/book-cover.jpg">
+                    </div>
+                    
+                    <div id="image-preview-container" style="display: none; text-align: center;">
+                        <img id="image-preview" class="image-preview" alt="Book cover preview">
+                        <br>
+                        <button type="button" class="remove-image" onclick="removeImage()">Remove Image</button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Review</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-review" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+
 </body>
 </html>
