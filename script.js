@@ -1,5 +1,5 @@
 
-        // Application State
+// Application State
         let usuarioActual = null;
         let vistaActual = 'landing';
         let idResenaEditando = null;
@@ -421,7 +421,7 @@
                     }
                 }
             } else {
-                title.textContent = 'Agregar Review';
+                title.textContent = 'Agregar Reseña';
                 document.getElementById('review-form').reset();
                 setRating(0);
             }
