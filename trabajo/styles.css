@@ -1046,4 +1046,37 @@
             .landing-about {
                 padding: 4rem 1rem;
             }
+
+            
+            
+
+            .site-footer {
+                background-color: #f8f8f8;
+                padding: 1.5rem;
+                text-align: center;
+                color: #777;
+                font-size: 0.9rem;
+                margin-top: 4rem;
+            }
+
+            .footer {
+                background-color: var(--bg-white);
+                color: var(--text-light);
+                text-align: center;
+                padding: 1rem 0;
+                border-top: 1px solid var(--border-light);
+                margin-top: auto;
+            }
+
+            html, body {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            main {
+                flex: 1;
+            }
+
+
         }
