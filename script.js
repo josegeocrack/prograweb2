@@ -490,7 +490,7 @@
             }
 
             if (rating === 0) {
-                alert('Please select a rating');
+                alert('Por favor seleccioná un rating.');
                 return;
             }
 
