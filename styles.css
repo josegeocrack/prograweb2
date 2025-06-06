@@ -6,11 +6,11 @@
         }
 
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #a5b4fc;
-            --secondary: #f43f5e;
-            --secondary-light: #fda4af;
+            --primario: #6366f1;
+            --primario-dark: #4f46e5;
+            --primario-light: #a5b4fc;
+            --secundario: #f43f5e;
+            --secundario-light: #fda4af;
             --text-dark: #1e293b;
             --text-light: #64748b;
             --text-muted: #94a3b8;
@@ -63,7 +63,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 1.75rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--primario);
             position: relative;
         }
 
@@ -74,7 +74,7 @@
             left: 0;
             width: 30px;
             height: 3px;
-            background: var(--secondary);
+            background: var(--secundario);
             border-radius: 3px;
         }
 
@@ -100,7 +100,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: var(--primary);
+            background: var(--primario);
             transition: width 0.3s ease;
         }
 
@@ -111,7 +111,7 @@
 
         .nav-links a:hover,
         .nav-links a.active {
-            color: var(--primary);
+            color: var(--primario);
         }
 
         .user-actions {
@@ -133,32 +133,32 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        .btn-primary {
-            background: var(--primary);
+        .btn-primario {
+            background: var(--primario);
             color: white;
             box-shadow: 0 4px 6px rgba(99, 102, 241, 0.25);
         }
 
-        .btn-primary:hover {
-            background: var(--primary-dark);
+        .btn-primario:hover {
+            background: var(--primario-dark);
             transform: translateY(-2px);
             box-shadow: 0 6px 10px rgba(99, 102, 241, 0.3);
         }
 
-        .btn-secondary {
+        .btn-secundario {
             background: var(--bg-white);
             color: var(--text-dark);
             border: 1px solid var(--border-light);
         }
 
-        .btn-secondary:hover {
+        .btn-secundario:hover {
             background: var(--bg-light);
             transform: translateY(-2px);
             box-shadow: var(--shadow-sm);
         }
 
         .btn-danger {
-            background: var(--secondary);
+            background: var(--secundario);
             color: white;
             box-shadow: 0 4px 6px rgba(244, 63, 94, 0.25);
         }
@@ -214,7 +214,7 @@
             left: 0;
             width: 100%;
             height: 6px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(to right, var(--primario), var(--secundario));
         }
 
         .form-group {
@@ -245,7 +245,7 @@
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--primario);
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
             background: var(--bg-white);
         }
@@ -275,13 +275,13 @@
         }
 
         .upload-option.active {
-            background: var(--primary);
+            background: var(--primario);
             color: white;
-            border-color: var(--primary);
+            border-color: var(--primario);
         }
 
         .upload-option:hover {
-            background: var(--primary-light);
+            background: var(--primario-light);
             color: white;
         }
 
@@ -297,12 +297,12 @@
 
         .file-upload-area:hover,
         .file-upload-area.dragover {
-            border-color: var(--primary);
+            border-color: var(--primario);
             background: rgba(99, 102, 241, 0.05);
         }
 
         .file-upload-area.has-file {
-            border-color: var(--primary);
+            border-color: var(--primario);
             background: rgba(99, 102, 241, 0.1);
         }
 
@@ -331,7 +331,7 @@
         }
 
         .remove-image {
-            background: var(--secondary);
+            background: var(--secundario);
             color: white;
             border: none;
             border-radius: 4px;
@@ -365,7 +365,7 @@
             transform: translateX(-50%);
             width: 80px;
             height: 3px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(to right, var(--primario), var(--secundario));
             border-radius: 3px;
         }
 
@@ -406,7 +406,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
+            background: linear-gradient(to right, var(--primario), var(--secundario));
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -497,14 +497,14 @@
 
         .bookmark-btn:hover {
             background: var(--bg-light);
-            color: var(--primary);
-            border-color: var(--primary-light);
+            color: var(--primario);
+            border-color: var(--primario-light);
         }
 
         .bookmark-btn.bookmarked {
-            color: var(--primary);
+            color: var(--primario);
             background: rgba(99, 102, 241, 0.1);
-            border-color: var(--primary-light);
+            border-color: var(--primario-light);
         }
 
         /* Genres */
@@ -631,7 +631,7 @@
         }
 
         .close-btn:hover {
-            color: var(--secondary);
+            color: var(--secundario);
             background: rgba(244, 63, 94, 0.1);
         }
 
@@ -693,7 +693,7 @@
         .mobile-nav-links a:hover,
         .mobile-nav-links a.active {
             background: var(--bg-light);
-            color: var(--primary);
+            color: var(--primario);
         }
 
         /* Responsive Design */
@@ -790,7 +790,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: var(--primary);
+            background: var(--primario);
             color: white;
             border: none;
             font-size: 1.5rem;
@@ -815,7 +815,7 @@
             justify-content: center;
         }
 
-        .filter-btn {
+        .btn-filtro {
             padding: 0.6rem 1.2rem;
             border: 1px solid var(--border-light);
             background: var(--bg-white);
@@ -828,17 +828,17 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .filter-btn:hover {
+        .btn-filtro:hover {
             background: var(--bg-light);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
-            color: var(--primary);
+            color: var(--primario);
         }
 
-        .filter-btn.active {
-            background: var(--primary);
+        .btn-filtro.active {
+            background: var(--primario);
             color: white;
-            border-color: var(--primary);
+            border-color: var(--primario);
             box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
         }
 
@@ -867,17 +867,18 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
+            background: var(--primario-light);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
+            background: var(--primario);
         }
 
         /* Landing Page */
         .landing-hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--primario) 0%, var(--secundario
+            ) 100%);
             color: white;
             padding: 6rem 2rem 4rem;
             text-align: center;
@@ -1001,7 +1002,7 @@
         .stat-number {
             font-size: 3rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--primario);
             margin-bottom: 0.5rem;
         }
 

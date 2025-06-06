@@ -1,11 +1,11 @@
 
         // Application State
-        let currentUser = null;
-        let currentView = 'landing';
-        let editingReviewId = null;
-        let currentGenreFilter = 'all';
-        let uploadedImageData = null;
-        let currentUploadOption = 'upload';
+        let usuarioActual = null;
+        let vistaActual = 'landing';
+        let idResenaEditando = null;
+        let filtroGeneroActual = 'all';
+        let datosImagenCargada = null;
+        let opcionSubidaActual = 'upload';
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
@@ -30,7 +30,7 @@
         function setupEventListeners() {
             // Logo click to return to landing page
             document.getElementById('logo-home').addEventListener('click', () => {
-                if (currentUser) {
+                if (usuarioActual) {
                     showView('home');
                 } else {
                     showView('landing');
@@ -53,7 +53,7 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const view = e.target.dataset.view;
-                    if (currentUser) {
+                    if (usuarioActual) {
                         showView(view);
                     }
                 });
@@ -100,7 +100,7 @@
             });
 
             // Genre filters
-            document.querySelectorAll('.filter-btn').forEach(btn => {
+            document.querySelectorAll('.btn-filtro').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const genre = e.target.dataset.genre;
                     setGenreFilter(genre);
@@ -130,7 +130,7 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const view = e.target.dataset.view;
-                    if (currentUser) {
+                    if (usuarioActual) {
                         showView(view);
                         closeMobileMenu();
                     }
@@ -161,9 +161,9 @@
                     uploadOptions.forEach(opt => opt.classList.remove('active'));
                     option.classList.add('active');
                     
-                    currentUploadOption = option.dataset.option;
+                    opcionSubidaActual = option.dataset.option;
                     
-                    if (currentUploadOption === 'upload') {
+                    if (opcionSubidaActual === 'upload') {
                         uploadArea.style.display = 'block';
                         urlArea.style.display = 'none';
                         urlInput.value = '';
@@ -217,20 +217,20 @@
         function handleFileUpload(file) {
             // Validate file
             if (!file.type.startsWith('image/')) {
-                alert('Please select an image file');
+                alert('Por favor seleccioná un archivo de imagen.');
                 return;
             }
 
             if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                alert('File size must be less than 5MB');
+                alert('El archivo no debe tener más de 5MB.');
                 return;
             }
 
             // Read file as base64
             const reader = new FileReader();
             reader.onload = (e) => {
-                uploadedImageData = e.target.result;
-                showImagePreview(uploadedImageData);
+                datosImagenCargada = e.target.result;
+                showImagePreview(datosImagenCargada);
                 document.getElementById('upload-area').classList.add('has-file');
             };
             reader.readAsDataURL(file);
@@ -250,7 +250,7 @@
         }
 
         function removeImage() {
-            uploadedImageData = null;
+            datosImagenCargada = null;
             document.getElementById('book-cover-file').value = '';
             document.getElementById('book-cover-url').value = '';
             document.getElementById('upload-area').classList.remove('has-file');
@@ -258,9 +258,9 @@
         }
 
         function checkAuthState() {
-            const savedUser = localStorage.getItem('currentUser');
+            const savedUser = localStorage.getItem('usuarioActual');
             if (savedUser) {
-                currentUser = JSON.parse(savedUser);
+                usuarioActual = JSON.parse(savedUser);
                 updateAuthUI();
                 showView('home');
             } else {
@@ -281,7 +281,7 @@
             // Update navigation
             updateNavigation(viewName);
 
-            currentView = viewName;
+            vistaActual = viewName;
 
             // Load view-specific content
             switch(viewName) {
@@ -309,8 +309,8 @@
             const user = users.find(u => u.email === email && u.password === password);
 
             if (user) {
-                currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(user));
+                usuarioActual = user;
+                localStorage.setItem('usuarioActual', JSON.stringify(user));
                 updateAuthUI();
                 showView('home');
             } else {
@@ -342,15 +342,15 @@
             users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
 
-            currentUser = newUser;
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            usuarioActual = newUser;
+            localStorage.setItem('usuarioActual', JSON.stringify(newUser));
             updateAuthUI();
             showView('home');
         }
 
         function logout() {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
+            usuarioActual = null;
+            localStorage.removeItem('usuarioActual');
             updateAuthUI();
             showView('login');
         }
@@ -361,11 +361,11 @@
             const userName = document.getElementById('user-name');
             const addReviewBtn = document.getElementById('add-review-btn');
 
-            if (currentUser) {
+            if (usuarioActual) {
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
                 userName.style.display = 'block';
-                userName.textContent = currentUser.name;
+                userName.textContent = usuarioActual.name;
                 addReviewBtn.style.display = 'flex';
             } else {
                 loginBtn.style.display = 'block';
@@ -376,13 +376,13 @@
         }
 
         function openReviewModal(reviewId = null) {
-            editingReviewId = reviewId;
+            idResenaEditando = reviewId;
             const modal = document.getElementById('review-modal');
             const title = document.getElementById('modal-title');
             
             // Reset upload state
-            currentUploadOption = 'upload';
-            uploadedImageData = null;
+            opcionSubidaActual = 'upload';
+            datosImagenCargada = null;
             removeImage();
             
             // Reset upload options
@@ -392,7 +392,7 @@
             document.getElementById('url-area').style.display = 'none';
             
             if (reviewId) {
-                title.textContent = 'Edit Review';
+                title.textContent = 'Editar Reseña';
                 const reviews = JSON.parse(localStorage.getItem('reviews'));
                 const review = reviews.find(r => r.id === reviewId);
                 if (review) {
@@ -405,12 +405,12 @@
                     if (review.coverUrl) {
                         if (review.coverUrl.startsWith('data:')) {
                             // It's an uploaded image
-                            uploadedImageData = review.coverUrl;
+                            datosImagenCargada = review.coverUrl;
                             showImagePreview(review.coverUrl);
                             document.getElementById('upload-area').classList.add('has-file');
                         } else {
                             // It's a URL
-                            currentUploadOption = 'url';
+                            opcionSubidaActual = 'url';
                             document.querySelectorAll('.upload-option').forEach(opt => opt.classList.remove('active'));
                             document.querySelector('[data-option="url"]').classList.add('active');
                             document.getElementById('upload-area').style.display = 'none';
@@ -421,7 +421,7 @@
                     }
                 }
             } else {
-                title.textContent = 'Add Review';
+                title.textContent = 'Agregar Review';
                 document.getElementById('review-form').reset();
                 setRating(0);
             }
@@ -431,7 +431,7 @@
 
         function closeReviewModal() {
             document.getElementById('review-modal').classList.remove('active');
-            editingReviewId = null;
+            idResenaEditando = null;
             removeImage();
         }
 
@@ -483,9 +483,9 @@
             
             // Get cover image
             let coverUrl = '';
-            if (currentUploadOption === 'upload' && uploadedImageData) {
-                coverUrl = uploadedImageData;
-            } else if (currentUploadOption === 'url') {
+            if (opcionSubidaActual === 'upload' && datosImagenCargada) {
+                coverUrl = datosImagenCargada;
+            } else if (opcionSubidaActual === 'url') {
                 coverUrl = document.getElementById('book-cover-url').value;
             }
 
@@ -496,9 +496,8 @@
 
             const reviews = JSON.parse(localStorage.getItem('reviews'));
             
-            if (editingReviewId) {
-                // Edit existing review
-                const reviewIndex = reviews.findIndex(r => r.id === editingReviewId);
+            if (idResenaEditando) {
+                const reviewIndex = reviews.findIndex(r => r.id === idResenaEditando);
                 if (reviewIndex !== -1) {
                     reviews[reviewIndex] = {
                         ...reviews[reviewIndex],
@@ -511,7 +510,7 @@
                     };
                 }
             } else {
-                // Add new review
+                // Agregar res
                 const newReview = {
                     id: Date.now().toString(),
                     title,
@@ -519,8 +518,8 @@
                     rating,
                     text,
                     coverUrl,
-                    userId: currentUser.id,
-                    userName: currentUser.name,
+                    userId: usuarioActual.id,
+                    userName: usuarioActual.name,
                     createdAt: new Date().toISOString()
                 };
                 reviews.unshift(newReview);
@@ -529,10 +528,9 @@
             localStorage.setItem('reviews', JSON.stringify(reviews));
             closeReviewModal();
             
-            // Refresh current view
-            if (currentView === 'home') {
+            if (vistaActual === 'home') {
                 loadReviews();
-            } else if (currentView === 'my-reviews') {
+            } else if (vistaActual === 'my-reviews') {
                 loadMyReviews();
             }
         }
@@ -542,15 +540,15 @@
             const container = document.getElementById('reviews-container');
             
             let filteredReviews = reviews;
-            if (currentGenreFilter !== 'all') {
-                filteredReviews = reviews.filter(r => r.genre === currentGenreFilter);
+            if (filtroGeneroActual !== 'all') {
+                filteredReviews = reviews.filter(r => r.genre === filtroGeneroActual);
             }
 
             if (filteredReviews.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <h3>No reviews found</h3>
-                        <p>Be the first to share a book review!</p>
+                        <h3>Ninguna reseña encontrada.</h3>
+                        <p>Sé el primero en escribir una!</p>
                     </div>
                 `;
                 return;
@@ -561,14 +559,14 @@
 
         function loadMyReviews() {
             const reviews = JSON.parse(localStorage.getItem('reviews'));
-            const myReviews = reviews.filter(r => r.userId === currentUser.id);
+            const myReviews = reviews.filter(r => r.userId === usuarioActual.id);
             const container = document.getElementById('my-reviews-container');
 
             if (myReviews.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <h3>No reviews yet</h3>
-                        <p>Start by adding your first book review!</p>
+                        <h3>No hay reseñas todavía.</h3>
+                        <p>Arrancá por compartirnos la primera!</p>
                     </div>
                 `;
                 return;
@@ -579,7 +577,7 @@
 
         function loadSavedReviews() {
             const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-            const userBookmarks = bookmarks.filter(b => b.userId === currentUser.id);
+            const userBookmarks = bookmarks.filter(b => b.userId === usuarioActual.id);
             const reviews = JSON.parse(localStorage.getItem('reviews'));
             const savedReviews = reviews.filter(r => userBookmarks.some(b => b.reviewId === r.id));
             const container = document.getElementById('saved-reviews-container');
@@ -587,8 +585,8 @@
             if (savedReviews.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <h3>No saved reviews</h3>
-                        <p>Bookmark reviews to save them here!</p>
+                        <h3>No hay reseñas guardadas</h3>
+                        <p>Mirá acá las reseñas que guardes!</p>
                     </div>
                 `;
                 return;
@@ -600,29 +598,29 @@
         function loadProfile() {
             const container = document.getElementById('profile-info');
             const reviews = JSON.parse(localStorage.getItem('reviews'));
-            const userReviews = reviews.filter(r => r.userId === currentUser.id);
+            const userReviews = reviews.filter(r => r.userId === usuarioActual.id);
             
             container.innerHTML = `
                 <div style="text-align: center; margin-bottom: 2rem;">
-                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem; font-weight: 700;">
-                        ${currentUser.name.charAt(0)}
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primario), var(--secundario)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem; font-weight: 700;">
+                        ${usuarioActual.name.charAt(0)}
                     </div>
-                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${currentUser.name}</h3>
-                    <p style="color: var(--text-muted);">${currentUser.email}</p>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${usuarioActual.name}</h3>
+                    <p style="color: var(--text-muted);">${usuarioActual.email}</p>
                     <div style="margin: 2rem 0; padding: 1.5rem; background: var(--bg-light); border-radius: 12px;">
                         <div style="display: flex; justify-content: space-around; text-align: center;">
                             <div>
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">${userReviews.length}</div>
-                                <div style="color: var(--text-light); font-size: 0.9rem;">Reviews</div>
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--primario);">${userReviews.length}</div>
+                                <div style="color: var(--text-light); font-size: 0.9rem;">Reseñas</div>
                             </div>
                             <div style="border-left: 1px solid var(--border-light); padding-left: 2rem;">
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">${calculateAverageRating(userReviews)}</div>
-                                <div style="color: var(--text-light); font-size: 0.9rem;">Avg Rating</div>
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--primario);">${calculateAverageRating(userReviews)}</div>
+                                <div style="color: var(--text-light); font-size: 0.9rem;">Rating promedio</div>
                             </div>
                         </div>
                     </div>
                     <p style="color: var(--text-muted); font-size: 0.875rem;">
-                        Member since ${new Date(currentUser.createdAt).toLocaleDateString()}
+                        Miembro desde ${new Date(usuarioActual.createdAt).toLocaleDateString("es-AR")}
                     </p>
                 </div>
             `;
@@ -636,7 +634,7 @@
 
         function createReviewCard(review, isOwner = false) {
             const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-            const isBookmarked = bookmarks.some(b => b.userId === currentUser.id && b.reviewId === review.id);
+            const isBookmarked = bookmarks.some(b => b.userId === usuarioActual.id && b.reviewId === review.id);
             const dateFormatted = formatDate(review.createdAt);
             
             return `
@@ -662,8 +660,8 @@
                                 ${isBookmarked ? '★' : '☆'} ${isBookmarked ? 'Saved' : 'Save'}
                             </button>
                         ` : `
-                            <button class="btn btn-secondary" onclick="openReviewModal('${review.id}')">Edit</button>
-                            <button class="btn btn-danger" onclick="deleteReview('${review.id}')">Delete</button>
+                            <button class="btn btn-secundario" onclick="openReviewModal('${review.id}')">Editar</button>
+                            <button class="btn btn-danger" onclick="deleteReview('${review.id}')">Eliminar</button>
                         `}
                     </div>
                 </div>
@@ -677,25 +675,25 @@
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             
             if (diffDays === 0) {
-                return 'Today';
+                return 'Hoy';
             } else if (diffDays === 1) {
-                return 'Yesterday';
+                return 'Ayer';
             } else if (diffDays < 7) {
-                return `${diffDays} days ago`;
+                return `Hace ${diffDays} días`;
             } else {
-                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                return date.toLocaleDateString('en-AR', { month: 'short', day: 'numeric', year: 'numeric' });
             }
         }
 
         function toggleBookmark(reviewId) {
             const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-            const existingBookmark = bookmarks.findIndex(b => b.userId === currentUser.id && b.reviewId === reviewId);
+            const existingBookmark = bookmarks.findIndex(b => b.userId === usuarioActual.id && b.reviewId === reviewId);
             
             if (existingBookmark !== -1) {
                 bookmarks.splice(existingBookmark, 1);
             } else {
                 bookmarks.push({
-                    userId: currentUser.id,
+                    userId: usuarioActual.id,
                     reviewId: reviewId,
                     createdAt: new Date().toISOString()
                 });
@@ -704,65 +702,64 @@
             localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
             
             // Refresh current view
-            if (currentView === 'home') {
+            if (vistaActual === 'home') {
                 loadReviews();
-            } else if (currentView === 'saved-reviews') {
+            } else if (vistaActual === 'saved-reviews') {
                 loadSavedReviews();
             }
         }
 
         function deleteReview(reviewId) {
-            if (confirm('Are you sure you want to delete this review?')) {
+            if (confirm('Estás seguro de que querés borrar esta reserva?')) {
                 const reviews = JSON.parse(localStorage.getItem('reviews'));
                 const updatedReviews = reviews.filter(r => r.id !== reviewId);
                 localStorage.setItem('reviews', JSON.stringify(updatedReviews));
                 
-                // Also remove any bookmarks for this review
                 const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
                 const updatedBookmarks = bookmarks.filter(b => b.reviewId !== reviewId);
                 localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
                 
-                // Refresh current view
-                if (currentView === 'my-reviews') {
+                // refrescar
+                if (vistaActual === 'my-reviews') {
                     loadMyReviews();
-                } else if (currentView === 'home') {
+                } else if (vistaActual === 'home') {
                     loadReviews();
                 }
             }
         }
 
         function setGenreFilter(genre) {
-            currentGenreFilter = genre;
+            filtroGeneroActual = genre;
             
             // Update filter buttons  {
-            currentGenreFilter = genre;
+            filtroGeneroActual = genre;
             
             // Update filter buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
+            document.querySelectorAll('.btn-filtro').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`[data-genre="${genre}"]`).classList.add('active');
             
             // Reload reviews with filter
-            if (currentView === 'home') {
+            if (vistaActual === 'home') {
                 loadReviews();
             }
         }
 
         function deleteAccount() {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+            if (confirm('Estás seguro de que querés borrar tu cuenta? Esta acción no es revertible.')) {
                 const users = JSON.parse(localStorage.getItem('users'));
-                const updatedUsers = users.filter(u => u.id !== currentUser.id);
+                const updatedUsers = users.filter(u => u.id !== usuarioActual.id);
                 localStorage.setItem('users', JSON.stringify(updatedUsers));
                 
                 // Remove user's reviews
                 const reviews = JSON.parse(localStorage.getItem('reviews'));
-                const updatedReviews = reviews.filter(r => r.userId !== currentUser.id);
+                const updatedReviews = reviews.filter(r => r.userId !== usuarioActual.id);
                 localStorage.setItem('reviews', JSON.stringify(updatedReviews));
                 
                 // Remove user's bookmarks
                 const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-                const updatedBookmarks = bookmarks.filter(b => b.userId !== currentUser.id);
+                const updatedBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id);
                 localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
                 
                 logout();
