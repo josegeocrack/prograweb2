@@ -350,22 +350,19 @@
             // Show selected view
             document.getElementById(`${viewName}-view`).classList.add('active');
 
+            // Always remove login validation messages when switching views
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.querySelectorAll('.validation-message').forEach(msg => msg.remove());
+            }
+
             // Reset forms when opening login or signup
             if (viewName === 'login') {
-                const loginForm = document.getElementById('login-form');
                 if (loginForm) loginForm.reset();
             }
             if (viewName === 'signup') {
                 const signupForm = document.getElementById('signup-form');
                 if (signupForm) signupForm.reset();
-            }
-            // Remove login validation message when leaving login view
-            if (viewName !== 'login') {
-                const loginForm = document.getElementById('login-form');
-                if (loginForm) {
-                    const existingMessage = loginForm.querySelector('.validation-message');
-                    if (existingMessage) existingMessage.remove();
-                }
             }
             // Update landing stats every time landing is shown
             if (viewName === 'landing') {
