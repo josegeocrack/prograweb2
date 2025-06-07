@@ -350,6 +350,15 @@
             // Show selected view
             document.getElementById(`${viewName}-view`).classList.add('active');
 
+            // Remove login validation message when leaving login view
+            if (viewName !== 'login') {
+                const loginForm = document.getElementById('login-form');
+                if (loginForm) {
+                    const existingMessage = loginForm.querySelector('.validation-message');
+                    if (existingMessage) existingMessage.remove();
+                }
+            }
+
             // Reset forms when opening login or signup
             if (viewName === 'login') {
                 const loginForm = document.getElementById('login-form');
@@ -409,6 +418,10 @@
                 localStorage.setItem('usuarioActual', JSON.stringify(user));
                 updateAuthUI();
                 showView('home');
+                // Remove any lingering validation message after successful login
+                if (passwordGroup.querySelector('.validation-message')) {
+                    passwordGroup.querySelector('.validation-message').remove();
+                }
             } else {
                 const message = document.createElement('div');
                 message.className = 'validation-message show';
