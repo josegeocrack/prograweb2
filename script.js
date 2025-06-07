@@ -9,9 +9,85 @@
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
+            updateAuthUI(); // Ensure nav bar is set correctly on first load
             initializeApp();
             setupEventListeners();
             checkAuthState();
+
+            // Custom validation for login email
+            const loginEmail = document.getElementById('login-email');
+            if (loginEmail) {
+                loginEmail.addEventListener('invalid', function(e) {
+                    if (loginEmail.validity.typeMismatch) {
+                        loginEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
+                    } else {
+                        loginEmail.setCustomValidity("");
+                    }
+                });
+                loginEmail.addEventListener('input', function(e) {
+                    loginEmail.setCustomValidity("");
+                });
+            }
+
+            // Custom validation for signup email
+            const signupEmail = document.getElementById('signup-email');
+            if (signupEmail) {
+                signupEmail.addEventListener('invalid', function(e) {
+                    if (signupEmail.validity.typeMismatch) {
+                        signupEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
+                    } else {
+                        signupEmail.setCustomValidity("");
+                    }
+                });
+                signupEmail.addEventListener('input', function(e) {
+                    signupEmail.setCustomValidity("");
+                });
+            }
+
+            // Custom validation for review textarea (Reseña)
+            const reviewText = document.getElementById('review-text');
+            if (reviewText) {
+                reviewText.addEventListener('invalid', function(e) {
+                    if (reviewText.validity.valueMissing) {
+                        reviewText.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        reviewText.setCustomValidity("");
+                    }
+                });
+                reviewText.addEventListener('input', function(e) {
+                    reviewText.setCustomValidity("");
+                });
+            }
+
+            // Custom validation for genre select (Género)
+            const reviewGenre = document.getElementById('book-genre');
+            if (reviewGenre) {
+                reviewGenre.addEventListener('invalid', function(e) {
+                    if (reviewGenre.validity.valueMissing) {
+                        reviewGenre.setCustomValidity("Por favor, seleccioná un género de la lista.");
+                    } else {
+                        reviewGenre.setCustomValidity("");
+                    }
+                });
+                reviewGenre.addEventListener('input', function(e) {
+                    reviewGenre.setCustomValidity("");
+                });
+            }
+
+            // Custom validation for book title (Título del libro)
+            const bookTitle = document.getElementById('book-title');
+            if (bookTitle) {
+                bookTitle.addEventListener('invalid', function(e) {
+                    if (bookTitle.validity.valueMissing) {
+                        bookTitle.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        bookTitle.setCustomValidity("");
+                    }
+                });
+                bookTitle.addEventListener('input', function(e) {
+                    bookTitle.setCustomValidity("");
+                });
+            }
         });
 
         function initializeApp() {
@@ -30,11 +106,7 @@
         function setupEventListeners() {
             // Logo click to return to landing page
             document.getElementById('logo-home').addEventListener('click', () => {
-                if (usuarioActual) {
-                    showView('home');
-                } else {
-                    showView('landing');
-                }
+                showView('landing');
             });
 
             // Back to landing links
@@ -278,6 +350,20 @@
             // Show selected view
             document.getElementById(`${viewName}-view`).classList.add('active');
 
+            // Reset forms when opening login or signup
+            if (viewName === 'login') {
+                const loginForm = document.getElementById('login-form');
+                if (loginForm) loginForm.reset();
+            }
+            if (viewName === 'signup') {
+                const signupForm = document.getElementById('signup-form');
+                if (signupForm) signupForm.reset();
+            }
+            // Update landing stats every time landing is shown
+            if (viewName === 'landing') {
+                updateLandingStats();
+            }
+
             // Update navigation
             updateNavigation(viewName);
 
@@ -298,6 +384,9 @@
                     loadProfile();
                     break;
             }
+
+            // Apply custom validation
+            applyCustomValidation();
         }
 
         function handleLogin(e) {
@@ -376,22 +465,78 @@
         }
 
         function updateAuthUI() {
+            console.log('updateAuthUI called. usuarioActual:', usuarioActual);
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
             const userName = document.getElementById('user-name');
             const addReviewBtn = document.getElementById('add-review-btn');
+
+            // Nav links (desktop)
+            const navInicio = document.getElementById('nav-inicio');
+            const navGeneros = document.getElementById('nav-generos');
+            const navMisResenas = document.getElementById('nav-mis-resenas');
+            const navResenasGuardadas = document.getElementById('nav-resenas-guardadas');
+            const navPerfil = document.getElementById('nav-perfil');
+            // Nav links (mobile)
+            const mobileNavInicio = document.getElementById('mobile-nav-inicio');
+            const mobileNavGeneros = document.getElementById('mobile-nav-generos');
+            const mobileNavMisResenas = document.getElementById('mobile-nav-mis-resenas');
+            const mobileNavResenasGuardadas = document.getElementById('mobile-nav-resenas-guardadas');
+            const mobileNavPerfil = document.getElementById('mobile-nav-perfil');
 
             if (usuarioActual) {
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
                 userName.style.display = 'block';
                 userName.textContent = usuarioActual.name;
-                addReviewBtn.style.display = 'flex';
+                if (addReviewBtn) addReviewBtn.style.display = 'flex';
+                if (navInicio) navInicio.style.display = '';
+                if (navGeneros) navGeneros.style.display = '';
+                if (navMisResenas) navMisResenas.style.display = '';
+                if (navResenasGuardadas) navResenasGuardadas.style.display = '';
+                if (navPerfil) navPerfil.style.display = '';
+                if (mobileNavInicio) mobileNavInicio.style.display = '';
+                if (mobileNavGeneros) mobileNavGeneros.style.display = '';
+                if (mobileNavMisResenas) mobileNavMisResenas.style.display = '';
+                if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = '';
+                if (mobileNavPerfil) mobileNavPerfil.style.display = '';
             } else {
                 loginBtn.style.display = 'block';
                 logoutBtn.style.display = 'none';
                 userName.style.display = 'none';
-                addReviewBtn.style.display = 'none';
+                if (addReviewBtn) addReviewBtn.style.display = 'none';
+                if (navInicio) navInicio.style.display = 'none';
+                if (navGeneros) navGeneros.style.display = 'none';
+                if (navMisResenas) navMisResenas.style.display = 'none';
+                if (navResenasGuardadas) navResenasGuardadas.style.display = 'none';
+                if (navPerfil) navPerfil.style.display = 'none';
+                if (mobileNavInicio) mobileNavInicio.style.display = 'none';
+                if (mobileNavGeneros) mobileNavGeneros.style.display = 'none';
+                if (mobileNavMisResenas) mobileNavMisResenas.style.display = 'none';
+                if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = 'none';
+                if (mobileNavPerfil) mobileNavPerfil.style.display = 'none';
+            }
+
+            // Hide or show landing page buttons based on login state
+            const landingCreateBtn = document.querySelector('.hero-actions .btn-primario');
+            const landingLoginBtn = document.querySelector('.hero-actions .btn-secundario');
+            if (usuarioActual) {
+                if (landingCreateBtn) landingCreateBtn.style.display = 'none';
+                if (landingLoginBtn) landingLoginBtn.style.display = 'none';
+            } else {
+                if (landingCreateBtn) landingCreateBtn.style.display = '';
+                if (landingLoginBtn) landingLoginBtn.style.display = '';
+            }
+
+            // Hide or show mobile menu button and mobile nav based on login state
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileNav = document.getElementById('mobile-nav');
+            if (usuarioActual) {
+                if (mobileMenuBtn) mobileMenuBtn.style.display = '';
+                if (mobileNav) mobileNav.style.display = '';
+            } else {
+                if (mobileMenuBtn) mobileMenuBtn.style.display = 'none';
+                if (mobileNav) mobileNav.style.display = 'none';
             }
         }
 
@@ -447,6 +592,9 @@
             }
             
             modal.classList.add('active');
+
+            // Apply custom validation
+            applyCustomValidation();
         }
 
         function closeReviewModal() {
@@ -691,45 +839,32 @@
                 </div>
             `;
         }
-        
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays === 0) {
-                return 'Hoy';
-            } else if (diffDays === 1) {
-                return 'Ayer';
-            } else if (diffDays < 7) {
-                return `Hace ${diffDays} días`;
-            } else {
-                return date.toLocaleDateString('en-AR', { month: 'short', day: 'numeric', year: 'numeric' });
-            }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString("es-AR");
         }
 
         function toggleBookmark(reviewId) {
-            const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-            const existingBookmark = bookmarks.findIndex(b => b.userId === usuarioActual.id && b.reviewId === reviewId);
-            
-            if (existingBookmark !== -1) {
-                bookmarks.splice(existingBookmark, 1);
-            } else {
-                bookmarks.push({
-                    userId: usuarioActual.id,
-                    reviewId: reviewId,
-                    createdAt: new Date().toISOString()
-                });
-            }
-            
-            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-            
-            // Refresh current view
-            if (vistaActual === 'home') {
-                loadReviews();
-            } else if (vistaActual === 'saved-reviews') {
-                loadSavedReviews();
+            const reviews = JSON.parse(localStorage.getItem('reviews'));
+            const reviewIndex = reviews.findIndex(r => r.id === reviewId);
+            if (reviewIndex !== -1) {
+                const review = reviews[reviewIndex];
+                const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+                const isBookmarked = bookmarks.some(b => b.userId === usuarioActual.id && b.reviewId === review.id);
+                if (isBookmarked) {
+                    const newBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id || b.reviewId !== review.id);
+                    localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
+                } else {
+                    const newBookmark = {
+                        id: Date.now().toString(),
+                        userId: usuarioActual.id,
+                        reviewId: review.id
+                    };
+                    bookmarks.push(newBookmark);
+                    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+                }
+                showView('home');
             }
         }
 
@@ -767,18 +902,9 @@
                 '¿Estás seguro de que querés borrar esta reseña?',
                 () => {
                     const reviews = JSON.parse(localStorage.getItem('reviews'));
-                    const updatedReviews = reviews.filter(r => r.id !== reviewId);
-                    localStorage.setItem('reviews', JSON.stringify(updatedReviews));
-                    
-                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-                    const updatedBookmarks = bookmarks.filter(b => b.reviewId !== reviewId);
-                    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-                    
-                    if (vistaActual === 'my-reviews') {
-                        loadMyReviews();
-                    } else if (vistaActual === 'home') {
-                        loadReviews();
-                    }
+                    const newReviews = reviews.filter(r => r.id !== reviewId);
+                    localStorage.setItem('reviews', JSON.stringify(newReviews));
+                    showView('home');
                 }
             );
         }
@@ -788,39 +914,27 @@
                 'Borrar cuenta',
                 '¿Estás seguro de que querés borrar tu cuenta? Esta acción no es revertible.',
                 () => {
-                    const users = JSON.parse(localStorage.getItem('users'));
+                    // Remove user from users array
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
                     const updatedUsers = users.filter(u => u.id !== usuarioActual.id);
                     localStorage.setItem('users', JSON.stringify(updatedUsers));
-                    
-                    const reviews = JSON.parse(localStorage.getItem('reviews'));
+                    // Remove user's reviews
+                    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
                     const updatedReviews = reviews.filter(r => r.userId !== usuarioActual.id);
                     localStorage.setItem('reviews', JSON.stringify(updatedReviews));
-                    
-                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+                    // Remove user's bookmarks
+                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
                     const updatedBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id);
                     localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-                    
-                    logout();
+                    // Log out
+                    usuarioActual = null;
+                    localStorage.removeItem('usuarioActual');
+                    updateAuthUI();
+                    showView('login');
+                    // Update landing stats to reflect the new user count
+                    updateLandingStats();
                 }
             );
-        }
-
-        function setGenreFilter(genre) {
-            filtroGeneroActual = genre;
-            
-            // Update filter buttons  {
-            filtroGeneroActual = genre;
-            
-            // Update filter buttons
-            document.querySelectorAll('.btn-filtro').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-genre="${genre}"]`).classList.add('active');
-            
-            // Reload reviews with filter
-            if (vistaActual === 'home') {
-                loadReviews();
-            }
         }
 
         function toggleMobileMenu() {
@@ -833,24 +947,157 @@
             mobileNav.classList.remove('active');
         }
 
-        function updateNavigation(viewName) {
-            //  escritorio
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
+        function setGenreFilter(genre) {
+            filtroGeneroActual = genre;
+
+            // Update filter buttons
+            document.querySelectorAll('.btn-filtro').forEach(btn => {
+                btn.classList.remove('active');
             });
-            document.querySelector(`[data-view="${viewName}"]`)?.classList.add('active');
-            
-            // mobile
-            document.querySelectorAll('.mobile-nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            document.querySelector(`.mobile-nav-link[data-view="${viewName}"]`)?.classList.add('active');
+            document.querySelector(`[data-genre="${genre}"]`).classList.add('active');
+
+            // Reload reviews with filter
+            if (vistaActual === 'home') {
+                loadReviews();
+            }
         }
 
         function updateLandingStats() {
-            const reviews = JSON.parse(localStorage.getItem('reviews'));
-            const users = JSON.parse(localStorage.getItem('users'));
-            
-            document.getElementById('total-reviews').textContent = reviews.length;
-            document.getElementById('total-users').textContent = users.length;
+            // Get the elements
+            const totalUsersElem = document.getElementById('total-users');
+            const totalReviewsElem = document.getElementById('total-reviews');
+
+            // Defensive: only update if elements exist
+            if (!totalUsersElem || !totalReviewsElem) return;
+
+            // Get users and reviews from localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+            // Update the DOM
+            totalUsersElem.textContent = users.length;
+            totalReviewsElem.textContent = reviews.length;
+        }
+
+        function updateNavigation(viewName) {
+            // Implementation of updateNavigation function
+        }
+
+        function applyCustomValidation() {
+            // Login email
+            const loginEmail = document.getElementById('login-email');
+            if (loginEmail) {
+                loginEmail.addEventListener('invalid', function(e) {
+                    if (loginEmail.validity.valueMissing) {
+                        loginEmail.setCustomValidity("Por favor, completá este campo.");
+                    } else if (loginEmail.validity.typeMismatch) {
+                        loginEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
+                    } else {
+                        loginEmail.setCustomValidity("");
+                    }
+                });
+                loginEmail.addEventListener('input', function(e) {
+                    loginEmail.setCustomValidity("");
+                });
+            }
+            // Login password
+            const loginPassword = document.getElementById('login-password');
+            if (loginPassword) {
+                loginPassword.addEventListener('invalid', function(e) {
+                    if (loginPassword.validity.valueMissing) {
+                        loginPassword.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        loginPassword.setCustomValidity("");
+                    }
+                });
+                loginPassword.addEventListener('input', function(e) {
+                    loginPassword.setCustomValidity("");
+                });
+            }
+            // Signup name
+            const signupName = document.getElementById('signup-name');
+            if (signupName) {
+                signupName.addEventListener('invalid', function(e) {
+                    if (signupName.validity.valueMissing) {
+                        signupName.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        signupName.setCustomValidity("");
+                    }
+                });
+                signupName.addEventListener('input', function(e) {
+                    signupName.setCustomValidity("");
+                });
+            }
+            // Signup email
+            const signupEmail = document.getElementById('signup-email');
+            if (signupEmail) {
+                signupEmail.addEventListener('invalid', function(e) {
+                    if (signupEmail.validity.valueMissing) {
+                        signupEmail.setCustomValidity("Por favor, completá este campo.");
+                    } else if (signupEmail.validity.typeMismatch) {
+                        signupEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
+                    } else {
+                        signupEmail.setCustomValidity("");
+                    }
+                });
+                signupEmail.addEventListener('input', function(e) {
+                    signupEmail.setCustomValidity("");
+                });
+            }
+            // Signup password
+            const signupPassword = document.getElementById('signup-password');
+            if (signupPassword) {
+                signupPassword.addEventListener('invalid', function(e) {
+                    if (signupPassword.validity.valueMissing) {
+                        signupPassword.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        signupPassword.setCustomValidity("");
+                    }
+                });
+                signupPassword.addEventListener('input', function(e) {
+                    signupPassword.setCustomValidity("");
+                });
+            }
+            // Review textarea
+            const reviewText = document.getElementById('review-text');
+            if (reviewText) {
+                reviewText.addEventListener('invalid', function(e) {
+                    if (reviewText.validity.valueMissing) {
+                        reviewText.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        reviewText.setCustomValidity("");
+                    }
+                });
+                reviewText.addEventListener('input', function(e) {
+                    reviewText.setCustomValidity("");
+                });
+            }
+            // Review genre
+            const reviewGenre = document.getElementById('book-genre');
+            if (reviewGenre) {
+                reviewGenre.addEventListener('invalid', function(e) {
+                    if (reviewGenre.validity.valueMissing) {
+                        reviewGenre.setCustomValidity("Por favor, seleccioná un género de la lista.");
+                    } else {
+                        reviewGenre.setCustomValidity("");
+                    }
+                });
+                reviewGenre.addEventListener('input', function(e) {
+                    reviewGenre.setCustomValidity("");
+                });
+            }
+            // Book title
+            const bookTitle = document.getElementById('book-title');
+            if (bookTitle) {
+                bookTitle.addEventListener('invalid', function(e) {
+                    if (bookTitle.validity.valueMissing) {
+                        bookTitle.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        bookTitle.setCustomValidity("");
+                    }
+                });
+                bookTitle.addEventListener('input', function(e) {
+                    bookTitle.setCustomValidity("");
+                });
+            }
         }
