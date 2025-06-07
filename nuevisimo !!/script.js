@@ -359,6 +359,10 @@
                 const signupForm = document.getElementById('signup-form');
                 if (signupForm) signupForm.reset();
             }
+            // Update landing stats every time landing is shown
+            if (viewName === 'landing') {
+                updateLandingStats();
+            }
 
             // Update navigation
             updateNavigation(viewName);
@@ -927,6 +931,8 @@
                     localStorage.removeItem('usuarioActual');
                     updateAuthUI();
                     showView('login');
+                    // Update landing stats to reflect the new user count
+                    updateLandingStats();
                 }
             );
         }
@@ -957,7 +963,20 @@
         }
 
         function updateLandingStats() {
-            // Implementation of updateLandingStats function
+            // Get the elements
+            const totalUsersElem = document.getElementById('total-users');
+            const totalReviewsElem = document.getElementById('total-reviews');
+
+            // Defensive: only update if elements exist
+            if (!totalUsersElem || !totalReviewsElem) return;
+
+            // Get users and reviews from localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+            // Update the DOM
+            totalUsersElem.textContent = users.length;
+            totalReviewsElem.textContent = reviews.length;
         }
 
         function updateNavigation(viewName) {
