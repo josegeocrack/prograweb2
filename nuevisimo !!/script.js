@@ -969,7 +969,9 @@
             const loginEmail = document.getElementById('login-email');
             if (loginEmail) {
                 loginEmail.addEventListener('invalid', function(e) {
-                    if (loginEmail.validity.typeMismatch) {
+                    if (loginEmail.validity.valueMissing) {
+                        loginEmail.setCustomValidity("Por favor, completá este campo.");
+                    } else if (loginEmail.validity.typeMismatch) {
                         loginEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
                     } else {
                         loginEmail.setCustomValidity("");
@@ -979,11 +981,41 @@
                     loginEmail.setCustomValidity("");
                 });
             }
+            // Login password
+            const loginPassword = document.getElementById('login-password');
+            if (loginPassword) {
+                loginPassword.addEventListener('invalid', function(e) {
+                    if (loginPassword.validity.valueMissing) {
+                        loginPassword.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        loginPassword.setCustomValidity("");
+                    }
+                });
+                loginPassword.addEventListener('input', function(e) {
+                    loginPassword.setCustomValidity("");
+                });
+            }
+            // Signup name
+            const signupName = document.getElementById('signup-name');
+            if (signupName) {
+                signupName.addEventListener('invalid', function(e) {
+                    if (signupName.validity.valueMissing) {
+                        signupName.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        signupName.setCustomValidity("");
+                    }
+                });
+                signupName.addEventListener('input', function(e) {
+                    signupName.setCustomValidity("");
+                });
+            }
             // Signup email
             const signupEmail = document.getElementById('signup-email');
             if (signupEmail) {
                 signupEmail.addEventListener('invalid', function(e) {
-                    if (signupEmail.validity.typeMismatch) {
+                    if (signupEmail.validity.valueMissing) {
+                        signupEmail.setCustomValidity("Por favor, completá este campo.");
+                    } else if (signupEmail.validity.typeMismatch) {
                         signupEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
                     } else {
                         signupEmail.setCustomValidity("");
@@ -991,6 +1023,20 @@
                 });
                 signupEmail.addEventListener('input', function(e) {
                     signupEmail.setCustomValidity("");
+                });
+            }
+            // Signup password
+            const signupPassword = document.getElementById('signup-password');
+            if (signupPassword) {
+                signupPassword.addEventListener('invalid', function(e) {
+                    if (signupPassword.validity.valueMissing) {
+                        signupPassword.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        signupPassword.setCustomValidity("");
+                    }
+                });
+                signupPassword.addEventListener('input', function(e) {
+                    signupPassword.setCustomValidity("");
                 });
             }
             // Review textarea
