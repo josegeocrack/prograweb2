@@ -106,11 +106,7 @@
         function setupEventListeners() {
             // Logo click to return to landing page
             document.getElementById('logo-home').addEventListener('click', () => {
-                if (usuarioActual) {
-                    showView('home');
-                } else {
-                    showView('landing');
-                }
+                showView('landing');
             });
 
             // Back to landing links
@@ -490,7 +486,6 @@
                 userName.style.display = 'block';
                 userName.textContent = usuarioActual.name;
                 if (addReviewBtn) addReviewBtn.style.display = 'flex';
-                // Show all nav links
                 if (navInicio) navInicio.style.display = '';
                 if (navGeneros) navGeneros.style.display = '';
                 if (navMisResenas) navMisResenas.style.display = '';
@@ -506,7 +501,6 @@
                 logoutBtn.style.display = 'none';
                 userName.style.display = 'none';
                 if (addReviewBtn) addReviewBtn.style.display = 'none';
-                // Hide nav links except logo and login
                 if (navInicio) navInicio.style.display = 'none';
                 if (navGeneros) navGeneros.style.display = 'none';
                 if (navMisResenas) navMisResenas.style.display = 'none';
@@ -517,6 +511,17 @@
                 if (mobileNavMisResenas) mobileNavMisResenas.style.display = 'none';
                 if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = 'none';
                 if (mobileNavPerfil) mobileNavPerfil.style.display = 'none';
+            }
+
+            // Hide or show landing page buttons based on login state
+            const landingCreateBtn = document.querySelector('.hero-actions .btn-primario');
+            const landingLoginBtn = document.querySelector('.hero-actions .btn-secundario');
+            if (usuarioActual) {
+                if (landingCreateBtn) landingCreateBtn.style.display = 'none';
+                if (landingLoginBtn) landingLoginBtn.style.display = 'none';
+            } else {
+                if (landingCreateBtn) landingCreateBtn.style.display = '';
+                if (landingLoginBtn) landingLoginBtn.style.display = '';
             }
         }
 
