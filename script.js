@@ -359,6 +359,14 @@
                 const signupForm = document.getElementById('signup-form');
                 if (signupForm) signupForm.reset();
             }
+            // Remove login validation message when leaving login view
+            if (viewName !== 'login') {
+                const loginForm = document.getElementById('login-form');
+                if (loginForm) {
+                    const existingMessage = loginForm.querySelector('.validation-message');
+                    if (existingMessage) existingMessage.remove();
+                }
+            }
             // Update landing stats every time landing is shown
             if (viewName === 'landing') {
                 updateLandingStats();

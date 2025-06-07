@@ -1171,3 +1171,9 @@
                 text-align: left;
             }
         }
+
+        @media (max-width: 400px) {
+            #user-name {
+                display: none !important;
+            }
+        }
