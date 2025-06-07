@@ -350,14 +350,9 @@
             // Show selected view
             document.getElementById(`${viewName}-view`).classList.add('active');
 
-            // Always remove login validation messages when switching views
-            const loginForm = document.getElementById('login-form');
-            if (loginForm) {
-                loginForm.querySelectorAll('.validation-message').forEach(msg => msg.remove());
-            }
-
             // Reset forms when opening login or signup
             if (viewName === 'login') {
+                const loginForm = document.getElementById('login-form');
                 if (loginForm) loginForm.reset();
             }
             if (viewName === 'signup') {
