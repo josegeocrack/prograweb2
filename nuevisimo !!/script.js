@@ -523,6 +523,17 @@
                 if (landingCreateBtn) landingCreateBtn.style.display = '';
                 if (landingLoginBtn) landingLoginBtn.style.display = '';
             }
+
+            // Hide or show mobile menu button and mobile nav based on login state
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileNav = document.getElementById('mobile-nav');
+            if (usuarioActual) {
+                if (mobileMenuBtn) mobileMenuBtn.style.display = '';
+                if (mobileNav) mobileNav.style.display = '';
+            } else {
+                if (mobileMenuBtn) mobileMenuBtn.style.display = 'none';
+                if (mobileNav) mobileNav.style.display = 'none';
+            }
         }
 
         function openReviewModal(reviewId = null) {
