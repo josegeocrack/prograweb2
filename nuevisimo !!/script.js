@@ -381,17 +381,52 @@
             const userName = document.getElementById('user-name');
             const addReviewBtn = document.getElementById('add-review-btn');
 
+            // Nav links (desktop)
+            const navInicio = document.getElementById('nav-inicio');
+            const navGeneros = document.getElementById('nav-generos');
+            const navMisResenas = document.getElementById('nav-mis-resenas');
+            const navResenasGuardadas = document.getElementById('nav-resenas-guardadas');
+            const navPerfil = document.getElementById('nav-perfil');
+            // Nav links (mobile)
+            const mobileNavInicio = document.getElementById('mobile-nav-inicio');
+            const mobileNavGeneros = document.getElementById('mobile-nav-generos');
+            const mobileNavMisResenas = document.getElementById('mobile-nav-mis-resenas');
+            const mobileNavResenasGuardadas = document.getElementById('mobile-nav-resenas-guardadas');
+            const mobileNavPerfil = document.getElementById('mobile-nav-perfil');
+
             if (usuarioActual) {
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
                 userName.style.display = 'block';
                 userName.textContent = usuarioActual.name;
-                addReviewBtn.style.display = 'flex';
+                if (addReviewBtn) addReviewBtn.style.display = 'flex';
+                // Show all nav links
+                if (navInicio) navInicio.style.display = '';
+                if (navGeneros) navGeneros.style.display = '';
+                if (navMisResenas) navMisResenas.style.display = '';
+                if (navResenasGuardadas) navResenasGuardadas.style.display = '';
+                if (navPerfil) navPerfil.style.display = '';
+                if (mobileNavInicio) mobileNavInicio.style.display = '';
+                if (mobileNavGeneros) mobileNavGeneros.style.display = '';
+                if (mobileNavMisResenas) mobileNavMisResenas.style.display = '';
+                if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = '';
+                if (mobileNavPerfil) mobileNavPerfil.style.display = '';
             } else {
                 loginBtn.style.display = 'block';
                 logoutBtn.style.display = 'none';
                 userName.style.display = 'none';
-                addReviewBtn.style.display = 'none';
+                if (addReviewBtn) addReviewBtn.style.display = 'none';
+                // Hide nav links except logo and login
+                if (navInicio) navInicio.style.display = 'none';
+                if (navGeneros) navGeneros.style.display = 'none';
+                if (navMisResenas) navMisResenas.style.display = 'none';
+                if (navResenasGuardadas) navResenasGuardadas.style.display = 'none';
+                if (navPerfil) navPerfil.style.display = 'none';
+                if (mobileNavInicio) mobileNavInicio.style.display = 'none';
+                if (mobileNavGeneros) mobileNavGeneros.style.display = 'none';
+                if (mobileNavMisResenas) mobileNavMisResenas.style.display = 'none';
+                if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = 'none';
+                if (mobileNavPerfil) mobileNavPerfil.style.display = 'none';
             }
         }
 
