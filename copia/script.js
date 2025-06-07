@@ -9,85 +9,9 @@
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
-            updateAuthUI(); // Ensure nav bar is set correctly on first load
             initializeApp();
             setupEventListeners();
             checkAuthState();
-
-            // Custom validation for login email
-            const loginEmail = document.getElementById('login-email');
-            if (loginEmail) {
-                loginEmail.addEventListener('invalid', function(e) {
-                    if (loginEmail.validity.typeMismatch) {
-                        loginEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
-                    } else {
-                        loginEmail.setCustomValidity("");
-                    }
-                });
-                loginEmail.addEventListener('input', function(e) {
-                    loginEmail.setCustomValidity("");
-                });
-            }
-
-            // Custom validation for signup email
-            const signupEmail = document.getElementById('signup-email');
-            if (signupEmail) {
-                signupEmail.addEventListener('invalid', function(e) {
-                    if (signupEmail.validity.typeMismatch) {
-                        signupEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
-                    } else {
-                        signupEmail.setCustomValidity("");
-                    }
-                });
-                signupEmail.addEventListener('input', function(e) {
-                    signupEmail.setCustomValidity("");
-                });
-            }
-
-            // Custom validation for review textarea (Reseña)
-            const reviewText = document.getElementById('review-text');
-            if (reviewText) {
-                reviewText.addEventListener('invalid', function(e) {
-                    if (reviewText.validity.valueMissing) {
-                        reviewText.setCustomValidity("Por favor, completá este campo.");
-                    } else {
-                        reviewText.setCustomValidity("");
-                    }
-                });
-                reviewText.addEventListener('input', function(e) {
-                    reviewText.setCustomValidity("");
-                });
-            }
-
-            // Custom validation for genre select (Género)
-            const reviewGenre = document.getElementById('book-genre');
-            if (reviewGenre) {
-                reviewGenre.addEventListener('invalid', function(e) {
-                    if (reviewGenre.validity.valueMissing) {
-                        reviewGenre.setCustomValidity("Por favor, seleccioná un género de la lista.");
-                    } else {
-                        reviewGenre.setCustomValidity("");
-                    }
-                });
-                reviewGenre.addEventListener('input', function(e) {
-                    reviewGenre.setCustomValidity("");
-                });
-            }
-
-            // Custom validation for book title (Título del libro)
-            const bookTitle = document.getElementById('book-title');
-            if (bookTitle) {
-                bookTitle.addEventListener('invalid', function(e) {
-                    if (bookTitle.validity.valueMissing) {
-                        bookTitle.setCustomValidity("Por favor, completá este campo.");
-                    } else {
-                        bookTitle.setCustomValidity("");
-                    }
-                });
-                bookTitle.addEventListener('input', function(e) {
-                    bookTitle.setCustomValidity("");
-                });
-            }
         });
 
         function initializeApp() {
@@ -354,16 +278,6 @@
             // Show selected view
             document.getElementById(`${viewName}-view`).classList.add('active');
 
-            // Reset forms when opening login or signup
-            if (viewName === 'login') {
-                const loginForm = document.getElementById('login-form');
-                if (loginForm) loginForm.reset();
-            }
-            if (viewName === 'signup') {
-                const signupForm = document.getElementById('signup-form');
-                if (signupForm) signupForm.reset();
-            }
-
             // Update navigation
             updateNavigation(viewName);
 
@@ -384,9 +298,6 @@
                     loadProfile();
                     break;
             }
-
-            // Apply custom validation
-            applyCustomValidation();
         }
 
         function handleLogin(e) {
@@ -465,7 +376,6 @@
         }
 
         function updateAuthUI() {
-            console.log('updateAuthUI called. usuarioActual:', usuarioActual);
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
             const userName = document.getElementById('user-name');
@@ -572,9 +482,6 @@
             }
             
             modal.classList.add('active');
-
-            // Apply custom validation
-            applyCustomValidation();
         }
 
         function closeReviewModal() {
@@ -819,32 +726,45 @@
                 </div>
             `;
         }
-
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString("es-AR");
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) {
+                return 'Hoy';
+            } else if (diffDays === 1) {
+                return 'Ayer';
+            } else if (diffDays < 7) {
+                return `Hace ${diffDays} días`;
+            } else {
+                return date.toLocaleDateString('en-AR', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
         }
 
         function toggleBookmark(reviewId) {
-            const reviews = JSON.parse(localStorage.getItem('reviews'));
-            const reviewIndex = reviews.findIndex(r => r.id === reviewId);
-            if (reviewIndex !== -1) {
-                const review = reviews[reviewIndex];
-                const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-                const isBookmarked = bookmarks.some(b => b.userId === usuarioActual.id && b.reviewId === review.id);
-                if (isBookmarked) {
-                    const newBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id || b.reviewId !== review.id);
-                    localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
-                } else {
-                    const newBookmark = {
-                        id: Date.now().toString(),
-                        userId: usuarioActual.id,
-                        reviewId: review.id
-                    };
-                    bookmarks.push(newBookmark);
-                    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-                }
-                showView('home');
+            const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+            const existingBookmark = bookmarks.findIndex(b => b.userId === usuarioActual.id && b.reviewId === reviewId);
+            
+            if (existingBookmark !== -1) {
+                bookmarks.splice(existingBookmark, 1);
+            } else {
+                bookmarks.push({
+                    userId: usuarioActual.id,
+                    reviewId: reviewId,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            
+            // Refresh current view
+            if (vistaActual === 'home') {
+                loadReviews();
+            } else if (vistaActual === 'saved-reviews') {
+                loadSavedReviews();
             }
         }
 
@@ -882,9 +802,18 @@
                 '¿Estás seguro de que querés borrar esta reseña?',
                 () => {
                     const reviews = JSON.parse(localStorage.getItem('reviews'));
-                    const newReviews = reviews.filter(r => r.id !== reviewId);
-                    localStorage.setItem('reviews', JSON.stringify(newReviews));
-                    showView('home');
+                    const updatedReviews = reviews.filter(r => r.id !== reviewId);
+                    localStorage.setItem('reviews', JSON.stringify(updatedReviews));
+                    
+                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+                    const updatedBookmarks = bookmarks.filter(b => b.reviewId !== reviewId);
+                    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+                    
+                    if (vistaActual === 'my-reviews') {
+                        loadMyReviews();
+                    } else if (vistaActual === 'home') {
+                        loadReviews();
+                    }
                 }
             );
         }
@@ -894,25 +823,39 @@
                 'Borrar cuenta',
                 '¿Estás seguro de que querés borrar tu cuenta? Esta acción no es revertible.',
                 () => {
-                    // Remove user from users array
-                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const users = JSON.parse(localStorage.getItem('users'));
                     const updatedUsers = users.filter(u => u.id !== usuarioActual.id);
                     localStorage.setItem('users', JSON.stringify(updatedUsers));
-                    // Remove user's reviews
-                    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+                    
+                    const reviews = JSON.parse(localStorage.getItem('reviews'));
                     const updatedReviews = reviews.filter(r => r.userId !== usuarioActual.id);
                     localStorage.setItem('reviews', JSON.stringify(updatedReviews));
-                    // Remove user's bookmarks
-                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+                    
+                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
                     const updatedBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id);
                     localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-                    // Log out
-                    usuarioActual = null;
-                    localStorage.removeItem('usuarioActual');
-                    updateAuthUI();
-                    showView('login');
+                    
+                    logout();
                 }
             );
+        }
+
+        function setGenreFilter(genre) {
+            filtroGeneroActual = genre;
+            
+            // Update filter buttons  {
+            filtroGeneroActual = genre;
+            
+            // Update filter buttons
+            document.querySelectorAll('.btn-filtro').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-genre="${genre}"]`).classList.add('active');
+            
+            // Reload reviews with filter
+            if (vistaActual === 'home') {
+                loadReviews();
+            }
         }
 
         function toggleMobileMenu() {
@@ -925,98 +868,24 @@
             mobileNav.classList.remove('active');
         }
 
-        function setGenreFilter(genre) {
-            filtroGeneroActual = genre;
-
-            // Update filter buttons
-            document.querySelectorAll('.btn-filtro').forEach(btn => {
-                btn.classList.remove('active');
+        function updateNavigation(viewName) {
+            //  escritorio
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
             });
-            document.querySelector(`[data-genre="${genre}"]`).classList.add('active');
-
-            // Reload reviews with filter
-            if (vistaActual === 'home') {
-                loadReviews();
-            }
+            document.querySelector(`[data-view="${viewName}"]`)?.classList.add('active');
+            
+            // mobile
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.mobile-nav-link[data-view="${viewName}"]`)?.classList.add('active');
         }
 
         function updateLandingStats() {
-            // Implementation of updateLandingStats function
-        }
-
-        function updateNavigation(viewName) {
-            // Implementation of updateNavigation function
-        }
-
-        function applyCustomValidation() {
-            // Login email
-            const loginEmail = document.getElementById('login-email');
-            if (loginEmail) {
-                loginEmail.addEventListener('invalid', function(e) {
-                    if (loginEmail.validity.typeMismatch) {
-                        loginEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
-                    } else {
-                        loginEmail.setCustomValidity("");
-                    }
-                });
-                loginEmail.addEventListener('input', function(e) {
-                    loginEmail.setCustomValidity("");
-                });
-            }
-            // Signup email
-            const signupEmail = document.getElementById('signup-email');
-            if (signupEmail) {
-                signupEmail.addEventListener('invalid', function(e) {
-                    if (signupEmail.validity.typeMismatch) {
-                        signupEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
-                    } else {
-                        signupEmail.setCustomValidity("");
-                    }
-                });
-                signupEmail.addEventListener('input', function(e) {
-                    signupEmail.setCustomValidity("");
-                });
-            }
-            // Review textarea
-            const reviewText = document.getElementById('review-text');
-            if (reviewText) {
-                reviewText.addEventListener('invalid', function(e) {
-                    if (reviewText.validity.valueMissing) {
-                        reviewText.setCustomValidity("Por favor, completá este campo.");
-                    } else {
-                        reviewText.setCustomValidity("");
-                    }
-                });
-                reviewText.addEventListener('input', function(e) {
-                    reviewText.setCustomValidity("");
-                });
-            }
-            // Review genre
-            const reviewGenre = document.getElementById('book-genre');
-            if (reviewGenre) {
-                reviewGenre.addEventListener('invalid', function(e) {
-                    if (reviewGenre.validity.valueMissing) {
-                        reviewGenre.setCustomValidity("Por favor, seleccioná un género de la lista.");
-                    } else {
-                        reviewGenre.setCustomValidity("");
-                    }
-                });
-                reviewGenre.addEventListener('input', function(e) {
-                    reviewGenre.setCustomValidity("");
-                });
-            }
-            // Book title
-            const bookTitle = document.getElementById('book-title');
-            if (bookTitle) {
-                bookTitle.addEventListener('invalid', function(e) {
-                    if (bookTitle.validity.valueMissing) {
-                        bookTitle.setCustomValidity("Por favor, completá este campo.");
-                    } else {
-                        bookTitle.setCustomValidity("");
-                    }
-                });
-                bookTitle.addEventListener('input', function(e) {
-                    bookTitle.setCustomValidity("");
-                });
-            }
+            const reviews = JSON.parse(localStorage.getItem('reviews'));
+            const users = JSON.parse(localStorage.getItem('users'));
+            
+            document.getElementById('total-reviews').textContent = reviews.length;
+            document.getElementById('total-users').textContent = users.length;
         }

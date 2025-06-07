@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReseñArte - Compartí tu experiencia de lectura</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    
+    <!-- Encabezado de la pagina, con una nav bar dentro, así puede quedar arriba guardada -->
+    <header>
+    <!-- nav bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo" id="logo-home">ReseñArte</div>
+            <ul class="nav-links">
+                <li id="nav-inicio"><a href="#" data-view="home" class="nav-link active">Inicio</a></li>
+                <li id="nav-generos"><a href="#" data-view="genres" class="nav-link">Géneros</a></li>
+                <li id="nav-mis-resenas"><a href="#" data-view="my-reviews" class="nav-link">Mis Reseñas</a></li>
+                <li id="nav-resenas-guardadas"><a href="#" data-view="saved-reviews" class="nav-link">Reseñas guardadas</a></li>
+                <li id="nav-perfil"><a href="#" data-view="profile" class="nav-link">Perfil</a></li>
+            </ul>
+            <div class="user-actions">
+                <span id="user-name" style="display: none;"></span>
+                <button id="login-btn" class="btn btn-primario">Iniciá sesión</button>
+                <button id="logout-btn" class="btn btn-secundario" style="display: none;">Cerrá sesión</button>
+                <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            </div>
+        </div>
+    </nav> 
+    </header>
+
+
+    <!-- si es un celular o se achica la pagina, cambio la barra acá abajo -->
+     <!-- usar menu tres barras -->
+    <nav class="mobile-nav" id="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li id="mobile-nav-inicio"><a href="#" data-view="home" class="mobile-nav-link active">Inicio</a></li>
+            <li id="mobile-nav-generos"><a href="#" data-view="genres" class="mobile-nav-link">Géneros</a></li>
+            <li id="mobile-nav-mis-resenas"><a href="#" data-view="my-reviews" class="mobile-nav-link">Mis reseñas</a></li>
+            <li id="mobile-nav-resenas-guardadas"><a href="#" data-view="saved-reviews" class="mobile-nav-link">Reseñas guardadas</a></li>
+            <li id="mobile-nav-perfil"><a href="#" data-view="profile" class="mobile-nav-link">Perfil</a></li>
+        </ul>
+    </nav>
+
+    <!-- Landing View -->
+    <div id="landing-view" class="view active">
+        <div class="landing-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Bienvenido a ReseñArte</h1>
+                <p class="hero-subtitle">Compartí tu experiencia de lectura y encontrá tu próximo libro favorito.</p>
+                <div class="hero-features">
+                    <div class="feature">
+                        <div class="feature-icon">📚</div>
+                        <h3>Reseñá</h3>
+                        <p>Compartí reseñas detalladas, con rating y hasta fotos.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Descubrí</h3>
+                        <p>Encontrá nuevos libros a través nuestra comunidad de amantes de la lectura.</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">💾</div>
+                        <h3>Guardá</h3>
+                        <p>Guardá las reseñas que más te tienten y planeá tus próximas lecturas</p>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn btn-primario btn-large" onclick="showView('signup')">Creá tu cuenta</button>
+                    <button class="btn btn-secundario btn-large" onclick="showView('login')">Accedé a tu cuenta</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="landing-about">
+            <div class="container">
+                <h2>Sobre nosotros</h2>                
+                <p>ReseñArte nace con la idea de convertirse en una plataforma para quien quiera leer y no sepa por dónde arrancar (o seguir). Sea que leas todos los días o que nunca hayas abierto un libro, en ReseñArte seguro vas a encontrar tu próxima gran lectura.</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-reviews">0</div>
+                        <div class="stat-label">Reseñas Totales</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-users">0</div>
+                        <div class="stat-label">Usuarios Activos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Géneros</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- pagina donde el usuario entra a su pagina -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Login View -->
+            <div id="login-view" class="view">
+                <div class="auth-container">
+                    <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">Qué bueno tenerte de vuelta.</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+
+                            <!-- no se como cambiar el msj required-->
+                            <label for="login-email">Mail</label>
+                            <input type="email" id="login-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Contraseña</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primario" style="width: 100%; margin-bottom: 1.5rem;">Iniciar sesión</button>
+                    </form>
+                    <p style="text-align: center; color: var(--text-light);">
+                        No tenés una cuenta ? 
+                        <a href="#" id="show-signup" style="color: var(--primario); font-weight: 500;">Registrate</a>
+                    </p>
+                    <p style="text-align: center; margin-top: 1.5rem;">
+                        <a href="#" id="back-to-landing" style="color: var(--text-light); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <span style="font-size: 1.2rem;">←</span> Ir a Inicio
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- registrarse a la pagina web (aca metes todos los datos para ingresar, nombre mail y contrasena, al pedo otra cosa)-->
+            <div id="signup-view" class="view">
+                <div class="auth-container">
+                    <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">Uníte a ReseñArte</h2>
+                    <form id="signup-form">
+                        <div class="form-group">
+                            <label for="signup-name">Nombre Completo</label>
+                            <input type="text" id="signup-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Mail</label>
+                            <input type="email" id="signup-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Contraseña</label>
+                            <input type="password" id="signup-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primario" style="width: 100%; margin-bottom: 1.5rem;">Crear Cuenta</button>
+                    </form>
+                    <p style="text-align: center; color: var(--text-light);">
+                        Ya tenés una cuenta ? 
+                        <a href="#" id="show-login" style="color: var(--primario); font-weight: 500;">Iniciar sesión</a>
+                    </p>
+                    <p style="text-align: center; margin-top: 1.5rem;">
+                        <a href="#" id="back-to-landing-signup" style="color: var(--text-light); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <span style="font-size: 1.2rem;">←</span> Ir a Inicio
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ver por filtros las reseñas una vez que iniciás sesión -->
+            <div id="home-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Últimas Reseñas</h1>
+                    <p class="page-subtitle">Descubrí qué están pensando los demás y compartí tus opiniones con el resto de los usuarios !</p>
+                </div>
+                <div class="filter-bar">
+                    <button class="btn-filtro active" data-genre="all">Todos</button>
+                    <button class="btn-filtro" data-genre="Fiction">Ficción</button>
+                    <button class="btn-filtro" data-genre="Mystery">Misterio</button>
+                    <button class="btn-filtro" data-genre="Romance">Romance</button>
+                    <button class="btn-filtro" data-genre="Sci-Fi">Ciencia Ficción</button>
+                    <button class="btn-filtro" data-genre="Non-Fiction">Non-Fiction</button>
+                </div>
+                <div id="reviews-container" class="reviews-grid"></div>
+            </div>
+
+            <!-- generos para ver el listado que hay, si entrás te lleva a las reseñaas que tenes a tu nombre en tu cuenta -->
+            <div id="genres-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Buscá por género</h1>
+                    <p class="page-subtitle">Leé reseñas por género para encontrar tu nuevo libro favorito.</p>
+                </div>
+                <div class="genres-grid">
+                    <div class="genre-card" data-genre="Fiction">
+                        <img src="images/ficicoin.avif" alt="Imagen representativa de libros de ficción" class="genre-image">
+                        <h3>Ficción</h3>
+                        <p>Obras literarias y novelas</p>
+                    </div>
+                    <div class="genre-card" data-genre="Mystery">
+                        <img src="images/misterio.avif" alt="Imagen representativa de libros de misterio y thriller" class="genre-image">
+                        <h3>Misterio</h3>
+                        <p>Thrillers y relatos detectivescos</p>
+                    </div>
+                    <div class="genre-card" data-genre="Romance">
+                        <img src="images/romance.avif" alt="Imagen representativa de libros de romance" class="genre-image">
+                        <h3>Romance</h3>
+                        <p>Historias de amor y relaciones</p>
+                    </div>
+                    <div class="genre-card" data-genre="Sci-Fi">
+                        <img src="images/scifi.avif" alt="Imagen representativa de libros de ciencia ficción" class="genre-image">
+                        <h3>Ciencia Ficción</h3>
+                        <p>Fantasía y ciencia ficción</p>
+                    </div>
+                    <div class="genre-card" data-genre="Non-Fiction">
+                        <img src="images/nonfi.avif" alt="Imagen representativa de libros de no ficción" class="genre-image">
+                        <h3>Non-Fiction</h3>
+                        <p>Libros de cultura general y educacionales</p>
+                    </div>
+                    <div class="genre-card" data-genre="Biography">
+                        <img src="images/biogra.avif" alt="Imagen representativa de libros de biografías" class="genre-image">
+                        <h3>Biografías</h3>
+                        <p>Relatos de vida y memorias</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- resenias del usuario -->
+            <div id="my-reviews-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Mis Reseñas</h1>
+                    <p class="page-subtitle">Gestioná tus reseñas y compartí tus opiniones.</p>
+                </div>
+                <div id="my-reviews-container" class="reviews-grid"></div>
+            </div>
+
+            <!-- guardados -->
+            <div id="saved-reviews-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Reseñas guardadas</h1>
+                    <p class="page-subtitle">Reseñas que guardaste, para futura referencia</p>
+                </div>
+                <div id="saved-reviews-container" class="reviews-grid"></div>
+            </div>
+
+
+            <!-- vista perfil -->
+            <div id="profile-view" class="view">
+                <div class="page-header">
+                    <h1 class="page-title">Perfil</h1>
+                    <p class="page-subtitle">Gestioná tu perfil y preferencias</p>
+                </div>
+                <div class="auth-container">
+                    <div id="profile-info"></div>
+                    <button class="btn btn-danger" id="delete-account" style="width: 100%; margin-top: 2rem;">Borrar cuenta</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Aboton de agregar resenia-->
+    <button class="add-review-btn" id="add-review-btn" style="display: none;">+</button>
+
+    <!-- resenar un libro con el usuario ya cargado -->
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Agregar Reseña</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <form id="review-form">
+                <div class="form-group">
+                    <label for="book-title">Título del libro</label>
+                    <input type="text" id="book-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="book-genre">Género</label>
+                    <select id="book-genre" required>
+                        <option value="">Seleccioná el género</option>
+                        <option value="Fiction">Ficción</option>
+                        <option value="Mystery">Misterio</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Sci-Fi">Ciencia Ficción</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Biography">Biografía</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="book-rating">Rating</label>
+                    <div id="rating-stars" class="star-rating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <input type="hidden" id="book-rating" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="review-text">Reseña</label>
+                    <textarea id="review-text" rows="5" required></textarea>
+                </div>
+                
+                <!-- subida de la foto -->
+                <div class="photo-upload-section">
+                    <label>Tapa del libro</label>
+                    <div class="upload-options">
+                        <div class="upload-option active" data-option="upload">📷 Subí tu foto</div>
+                        <div class="upload-option" data-option="url">🔗 Usar un URL</div>
+                    </div>
+                    
+                    <div id="upload-area" class="file-upload-area">
+                        <div class="upload-icon">📚</div>
+                        <div class="upload-text">
+                            <strong>Click para cargar la imagen</strong> o arrastrá acá<br>
+                            <small>PNG, JPG, GIF hasta 5MB</small>
+                        </div>
+                        <input type="file" id="book-cover-file" class="file-input" accept="image/*">
+                    </div>
+                    
+                    <div id="url-area" class="form-group" style="display: none;">
+                        <input type="url" id="book-cover-url" placeholder="https://example.com/book-cover.jpg">
+                    </div>
+                    
+                    <div id="image-preview-container" style="display: none; text-align: center;">
+                        <img id="image-preview" class="image-preview" alt="Book cover preview">
+                        <br>
+                        <button type="button" class="remove-image" onclick="removeImage()">Eliminar imagen/button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primario" style="flex: 1;">Guardar reseña</button>
+                    <button type="button" class="btn btn-secundario" id="cancel-review" style="flex: 1;">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="confirmation-title">Confirmar acción</h2>
+            <p id="confirmation-message"></p>
+            <div class="modal-actions">
+                <button id="confirmation-cancel" class="btn btn-secondary">Cancelar</button>
+                <button id="confirmation-confirm" class="btn btn-danger">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    
+<!--AGREGOOOIOO -->
+    <footer class="footer">
+        <p>&copy; 2025 ReseñArte - Todos los derechos reservados.</p>
+    </footer>
+
+
+</body>
+</html>

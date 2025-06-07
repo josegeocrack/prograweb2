@@ -43,51 +43,6 @@
                     signupEmail.setCustomValidity("");
                 });
             }
-
-            // Custom validation for review textarea (Reseña)
-            const reviewText = document.getElementById('review-text');
-            if (reviewText) {
-                reviewText.addEventListener('invalid', function(e) {
-                    if (reviewText.validity.valueMissing) {
-                        reviewText.setCustomValidity("Por favor, completá este campo.");
-                    } else {
-                        reviewText.setCustomValidity("");
-                    }
-                });
-                reviewText.addEventListener('input', function(e) {
-                    reviewText.setCustomValidity("");
-                });
-            }
-
-            // Custom validation for genre select (Género)
-            const reviewGenre = document.getElementById('book-genre');
-            if (reviewGenre) {
-                reviewGenre.addEventListener('invalid', function(e) {
-                    if (reviewGenre.validity.valueMissing) {
-                        reviewGenre.setCustomValidity("Por favor, seleccioná un género de la lista.");
-                    } else {
-                        reviewGenre.setCustomValidity("");
-                    }
-                });
-                reviewGenre.addEventListener('input', function(e) {
-                    reviewGenre.setCustomValidity("");
-                });
-            }
-
-            // Custom validation for book title (Título del libro)
-            const bookTitle = document.getElementById('book-title');
-            if (bookTitle) {
-                bookTitle.addEventListener('invalid', function(e) {
-                    if (bookTitle.validity.valueMissing) {
-                        bookTitle.setCustomValidity("Por favor, completá este campo.");
-                    } else {
-                        bookTitle.setCustomValidity("");
-                    }
-                });
-                bookTitle.addEventListener('input', function(e) {
-                    bookTitle.setCustomValidity("");
-                });
-            }
         });
 
         function initializeApp() {
@@ -354,16 +309,6 @@
             // Show selected view
             document.getElementById(`${viewName}-view`).classList.add('active');
 
-            // Reset forms when opening login or signup
-            if (viewName === 'login') {
-                const loginForm = document.getElementById('login-form');
-                if (loginForm) loginForm.reset();
-            }
-            if (viewName === 'signup') {
-                const signupForm = document.getElementById('signup-form');
-                if (signupForm) signupForm.reset();
-            }
-
             // Update navigation
             updateNavigation(viewName);
 
@@ -384,9 +329,6 @@
                     loadProfile();
                     break;
             }
-
-            // Apply custom validation
-            applyCustomValidation();
         }
 
         function handleLogin(e) {
@@ -572,9 +514,6 @@
             }
             
             modal.classList.add('active');
-
-            // Apply custom validation
-            applyCustomValidation();
         }
 
         function closeReviewModal() {
@@ -848,71 +787,20 @@
             }
         }
 
-        function showConfirmationModal(title, message, onConfirm) {
-            const modal = document.getElementById('confirmation-modal');
-            const modalTitle = document.getElementById('confirmation-title');
-            const modalMessage = document.getElementById('confirmation-message');
-            const confirmBtn = document.getElementById('confirmation-confirm');
-            const cancelBtn = document.getElementById('confirmation-cancel');
-
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modal.classList.add('active');
-
-            const handleConfirm = () => {
-                modal.classList.remove('active');
-                confirmBtn.removeEventListener('click', handleConfirm);
-                cancelBtn.removeEventListener('click', handleCancel);
-                onConfirm();
-            };
-
-            const handleCancel = () => {
-                modal.classList.remove('active');
-                confirmBtn.removeEventListener('click', handleConfirm);
-                cancelBtn.removeEventListener('click', handleCancel);
-            };
-
-            confirmBtn.addEventListener('click', handleConfirm);
-            cancelBtn.addEventListener('click', handleCancel);
-        }
-
         function deleteReview(reviewId) {
-            showConfirmationModal(
-                'Borrar reseña',
-                '¿Estás seguro de que querés borrar esta reseña?',
-                () => {
-                    const reviews = JSON.parse(localStorage.getItem('reviews'));
-                    const newReviews = reviews.filter(r => r.id !== reviewId);
-                    localStorage.setItem('reviews', JSON.stringify(newReviews));
-                    showView('home');
-                }
-            );
+            const reviews = JSON.parse(localStorage.getItem('reviews'));
+            const newReviews = reviews.filter(r => r.id !== reviewId);
+            localStorage.setItem('reviews', JSON.stringify(newReviews));
+            showView('home');
         }
 
         function deleteAccount() {
-            showConfirmationModal(
-                'Borrar cuenta',
-                '¿Estás seguro de que querés borrar tu cuenta? Esta acción no es revertible.',
-                () => {
-                    // Remove user from users array
-                    const users = JSON.parse(localStorage.getItem('users')) || [];
-                    const updatedUsers = users.filter(u => u.id !== usuarioActual.id);
-                    localStorage.setItem('users', JSON.stringify(updatedUsers));
-                    // Remove user's reviews
-                    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
-                    const updatedReviews = reviews.filter(r => r.userId !== usuarioActual.id);
-                    localStorage.setItem('reviews', JSON.stringify(updatedReviews));
-                    // Remove user's bookmarks
-                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
-                    const updatedBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id);
-                    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-                    // Log out
-                    usuarioActual = null;
-                    localStorage.removeItem('usuarioActual');
-                    updateAuthUI();
-                    showView('login');
-                }
-            );
+            usuarioActual = null;
+            localStorage.removeItem('usuarioActual');
+            localStorage.removeItem('bookmarks');
+            localStorage.removeItem('reviews');
+            updateAuthUI();
+            showView('login');
         }
 
         function toggleMobileMenu() {
@@ -946,77 +834,4 @@
 
         function updateNavigation(viewName) {
             // Implementation of updateNavigation function
-        }
-
-        function applyCustomValidation() {
-            // Login email
-            const loginEmail = document.getElementById('login-email');
-            if (loginEmail) {
-                loginEmail.addEventListener('invalid', function(e) {
-                    if (loginEmail.validity.typeMismatch) {
-                        loginEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
-                    } else {
-                        loginEmail.setCustomValidity("");
-                    }
-                });
-                loginEmail.addEventListener('input', function(e) {
-                    loginEmail.setCustomValidity("");
-                });
-            }
-            // Signup email
-            const signupEmail = document.getElementById('signup-email');
-            if (signupEmail) {
-                signupEmail.addEventListener('invalid', function(e) {
-                    if (signupEmail.validity.typeMismatch) {
-                        signupEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
-                    } else {
-                        signupEmail.setCustomValidity("");
-                    }
-                });
-                signupEmail.addEventListener('input', function(e) {
-                    signupEmail.setCustomValidity("");
-                });
-            }
-            // Review textarea
-            const reviewText = document.getElementById('review-text');
-            if (reviewText) {
-                reviewText.addEventListener('invalid', function(e) {
-                    if (reviewText.validity.valueMissing) {
-                        reviewText.setCustomValidity("Por favor, completá este campo.");
-                    } else {
-                        reviewText.setCustomValidity("");
-                    }
-                });
-                reviewText.addEventListener('input', function(e) {
-                    reviewText.setCustomValidity("");
-                });
-            }
-            // Review genre
-            const reviewGenre = document.getElementById('book-genre');
-            if (reviewGenre) {
-                reviewGenre.addEventListener('invalid', function(e) {
-                    if (reviewGenre.validity.valueMissing) {
-                        reviewGenre.setCustomValidity("Por favor, seleccioná un género de la lista.");
-                    } else {
-                        reviewGenre.setCustomValidity("");
-                    }
-                });
-                reviewGenre.addEventListener('input', function(e) {
-                    reviewGenre.setCustomValidity("");
-                });
-            }
-            // Book title
-            const bookTitle = document.getElementById('book-title');
-            if (bookTitle) {
-                bookTitle.addEventListener('invalid', function(e) {
-                    if (bookTitle.validity.valueMissing) {
-                        bookTitle.setCustomValidity("Por favor, completá este campo.");
-                    } else {
-                        bookTitle.setCustomValidity("");
-                    }
-                });
-                bookTitle.addEventListener('input', function(e) {
-                    bookTitle.setCustomValidity("");
-                });
-            }
         }
