@@ -106,11 +106,7 @@
         function setupEventListeners() {
             // Logo click to return to landing page
             document.getElementById('logo-home').addEventListener('click', () => {
-                if (usuarioActual) {
-                    showView('home');
-                } else {
-                    showView('landing');
-                }
+                showView('landing');
             });
 
             // Back to landing links
@@ -354,6 +350,15 @@
             // Show selected view
             document.getElementById(`${viewName}-view`).classList.add('active');
 
+            // Remove login validation message when leaving login view
+            if (viewName !== 'login') {
+                const loginForm = document.getElementById('login-form');
+                if (loginForm) {
+                    const existingMessage = loginForm.querySelector('.validation-message');
+                    if (existingMessage) existingMessage.remove();
+                }
+            }
+
             // Reset forms when opening login or signup
             if (viewName === 'login') {
                 const loginForm = document.getElementById('login-form');
@@ -362,6 +367,10 @@
             if (viewName === 'signup') {
                 const signupForm = document.getElementById('signup-form');
                 if (signupForm) signupForm.reset();
+            }
+            // Update landing stats every time landing is shown
+            if (viewName === 'landing') {
+                updateLandingStats();
             }
 
             // Update navigation
@@ -409,6 +418,10 @@
                 localStorage.setItem('usuarioActual', JSON.stringify(user));
                 updateAuthUI();
                 showView('home');
+                // Remove any lingering validation message after successful login
+                if (passwordGroup.querySelector('.validation-message')) {
+                    passwordGroup.querySelector('.validation-message').remove();
+                }
             } else {
                 const message = document.createElement('div');
                 message.className = 'validation-message show';
@@ -490,7 +503,6 @@
                 userName.style.display = 'block';
                 userName.textContent = usuarioActual.name;
                 if (addReviewBtn) addReviewBtn.style.display = 'flex';
-                // Show all nav links
                 if (navInicio) navInicio.style.display = '';
                 if (navGeneros) navGeneros.style.display = '';
                 if (navMisResenas) navMisResenas.style.display = '';
@@ -506,7 +518,6 @@
                 logoutBtn.style.display = 'none';
                 userName.style.display = 'none';
                 if (addReviewBtn) addReviewBtn.style.display = 'none';
-                // Hide nav links except logo and login
                 if (navInicio) navInicio.style.display = 'none';
                 if (navGeneros) navGeneros.style.display = 'none';
                 if (navMisResenas) navMisResenas.style.display = 'none';
@@ -517,6 +528,28 @@
                 if (mobileNavMisResenas) mobileNavMisResenas.style.display = 'none';
                 if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = 'none';
                 if (mobileNavPerfil) mobileNavPerfil.style.display = 'none';
+            }
+
+            // Hide or show landing page buttons based on login state
+            const landingCreateBtn = document.querySelector('.hero-actions .btn-primario');
+            const landingLoginBtn = document.querySelector('.hero-actions .btn-secundario');
+            if (usuarioActual) {
+                if (landingCreateBtn) landingCreateBtn.style.display = 'none';
+                if (landingLoginBtn) landingLoginBtn.style.display = 'none';
+            } else {
+                if (landingCreateBtn) landingCreateBtn.style.display = '';
+                if (landingLoginBtn) landingLoginBtn.style.display = '';
+            }
+
+            // Hide or show mobile menu button and mobile nav based on login state
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileNav = document.getElementById('mobile-nav');
+            if (usuarioActual) {
+                if (mobileMenuBtn) mobileMenuBtn.style.display = '';
+                if (mobileNav) mobileNav.style.display = '';
+            } else {
+                if (mobileMenuBtn) mobileMenuBtn.style.display = 'none';
+                if (mobileNav) mobileNav.style.display = 'none';
             }
         }
 
@@ -911,6 +944,8 @@
                     localStorage.removeItem('usuarioActual');
                     updateAuthUI();
                     showView('login');
+                    // Update landing stats to reflect the new user count
+                    updateLandingStats();
                 }
             );
         }
@@ -941,7 +976,20 @@
         }
 
         function updateLandingStats() {
-            // Implementation of updateLandingStats function
+            // Get the elements
+            const totalUsersElem = document.getElementById('total-users');
+            const totalReviewsElem = document.getElementById('total-reviews');
+
+            // Defensive: only update if elements exist
+            if (!totalUsersElem || !totalReviewsElem) return;
+
+            // Get users and reviews from localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+            // Update the DOM
+            totalUsersElem.textContent = users.length;
+            totalReviewsElem.textContent = reviews.length;
         }
 
         function updateNavigation(viewName) {
@@ -953,7 +1001,9 @@
             const loginEmail = document.getElementById('login-email');
             if (loginEmail) {
                 loginEmail.addEventListener('invalid', function(e) {
-                    if (loginEmail.validity.typeMismatch) {
+                    if (loginEmail.validity.valueMissing) {
+                        loginEmail.setCustomValidity("Por favor, completá este campo.");
+                    } else if (loginEmail.validity.typeMismatch) {
                         loginEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
                     } else {
                         loginEmail.setCustomValidity("");
@@ -963,11 +1013,41 @@
                     loginEmail.setCustomValidity("");
                 });
             }
+            // Login password
+            const loginPassword = document.getElementById('login-password');
+            if (loginPassword) {
+                loginPassword.addEventListener('invalid', function(e) {
+                    if (loginPassword.validity.valueMissing) {
+                        loginPassword.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        loginPassword.setCustomValidity("");
+                    }
+                });
+                loginPassword.addEventListener('input', function(e) {
+                    loginPassword.setCustomValidity("");
+                });
+            }
+            // Signup name
+            const signupName = document.getElementById('signup-name');
+            if (signupName) {
+                signupName.addEventListener('invalid', function(e) {
+                    if (signupName.validity.valueMissing) {
+                        signupName.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        signupName.setCustomValidity("");
+                    }
+                });
+                signupName.addEventListener('input', function(e) {
+                    signupName.setCustomValidity("");
+                });
+            }
             // Signup email
             const signupEmail = document.getElementById('signup-email');
             if (signupEmail) {
                 signupEmail.addEventListener('invalid', function(e) {
-                    if (signupEmail.validity.typeMismatch) {
+                    if (signupEmail.validity.valueMissing) {
+                        signupEmail.setCustomValidity("Por favor, completá este campo.");
+                    } else if (signupEmail.validity.typeMismatch) {
                         signupEmail.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
                     } else {
                         signupEmail.setCustomValidity("");
@@ -975,6 +1055,20 @@
                 });
                 signupEmail.addEventListener('input', function(e) {
                     signupEmail.setCustomValidity("");
+                });
+            }
+            // Signup password
+            const signupPassword = document.getElementById('signup-password');
+            if (signupPassword) {
+                signupPassword.addEventListener('invalid', function(e) {
+                    if (signupPassword.validity.valueMissing) {
+                        signupPassword.setCustomValidity("Por favor, completá este campo.");
+                    } else {
+                        signupPassword.setCustomValidity("");
+                    }
+                });
+                signupPassword.addEventListener('input', function(e) {
+                    signupPassword.setCustomValidity("");
                 });
             }
             // Review textarea
