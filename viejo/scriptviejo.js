@@ -30,11 +30,7 @@
         function setupEventListeners() {
             // Logo click to return to landing page
             document.getElementById('logo-home').addEventListener('click', () => {
-                if (usuarioActual) {
-                    showView('home');
-                } else {
-                    showView('landing');
-                }
+                showView('landing');
             });
 
             // Back to landing links
@@ -709,76 +705,23 @@
             }
         }
 
-        function showConfirmationModal(title, message, onConfirm) {
-            const modal = document.getElementById('confirmation-modal');
-            const modalTitle = document.getElementById('confirmation-title');
-            const modalMessage = document.getElementById('confirmation-message');
-            const confirmBtn = document.getElementById('confirmation-confirm');
-            const cancelBtn = document.getElementById('confirmation-cancel');
-
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modal.classList.add('active');
-
-            const handleConfirm = () => {
-                modal.classList.remove('active');
-                confirmBtn.removeEventListener('click', handleConfirm);
-                cancelBtn.removeEventListener('click', handleCancel);
-                onConfirm();
-            };
-
-            const handleCancel = () => {
-                modal.classList.remove('active');
-                confirmBtn.removeEventListener('click', handleConfirm);
-                cancelBtn.removeEventListener('click', handleCancel);
-            };
-
-            confirmBtn.addEventListener('click', handleConfirm);
-            cancelBtn.addEventListener('click', handleCancel);
-        }
-
         function deleteReview(reviewId) {
-            showConfirmationModal(
-                'Borrar reseña',
-                '¿Estás seguro de que querés borrar esta reseña?',
-                () => {
-                    const reviews = JSON.parse(localStorage.getItem('reviews'));
-                    const updatedReviews = reviews.filter(r => r.id !== reviewId);
-                    localStorage.setItem('reviews', JSON.stringify(updatedReviews));
-                    
-                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-                    const updatedBookmarks = bookmarks.filter(b => b.reviewId !== reviewId);
-                    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-                    
-                    if (vistaActual === 'my-reviews') {
-                        loadMyReviews();
-                    } else if (vistaActual === 'home') {
-                        loadReviews();
-                    }
+            if (confirm('Estás seguro de que querés borrar esta reserva?')) {
+                const reviews = JSON.parse(localStorage.getItem('reviews'));
+                const updatedReviews = reviews.filter(r => r.id !== reviewId);
+                localStorage.setItem('reviews', JSON.stringify(updatedReviews));
+                
+                const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+                const updatedBookmarks = bookmarks.filter(b => b.reviewId !== reviewId);
+                localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+                
+                // refrescar
+                if (vistaActual === 'my-reviews') {
+                    loadMyReviews();
+                } else if (vistaActual === 'home') {
+                    loadReviews();
                 }
-            );
-        }
-
-        function deleteAccount() {
-            showConfirmationModal(
-                'Borrar cuenta',
-                '¿Estás seguro de que querés borrar tu cuenta? Esta acción no es revertible.',
-                () => {
-                    const users = JSON.parse(localStorage.getItem('users'));
-                    const updatedUsers = users.filter(u => u.id !== usuarioActual.id);
-                    localStorage.setItem('users', JSON.stringify(updatedUsers));
-                    
-                    const reviews = JSON.parse(localStorage.getItem('reviews'));
-                    const updatedReviews = reviews.filter(r => r.userId !== usuarioActual.id);
-                    localStorage.setItem('reviews', JSON.stringify(updatedReviews));
-                    
-                    const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-                    const updatedBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id);
-                    localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-                    
-                    logout();
-                }
-            );
+            }
         }
 
         function setGenreFilter(genre) {
@@ -796,6 +739,26 @@
             // Reload reviews with filter
             if (vistaActual === 'home') {
                 loadReviews();
+            }
+        }
+
+        function deleteAccount() {
+            if (confirm('Estás seguro de que querés borrar tu cuenta? Esta acción no es revertible.')) {
+                const users = JSON.parse(localStorage.getItem('users'));
+                const updatedUsers = users.filter(u => u.id !== usuarioActual.id);
+                localStorage.setItem('users', JSON.stringify(updatedUsers));
+                
+                // Remove user's reviews
+                const reviews = JSON.parse(localStorage.getItem('reviews'));
+                const updatedReviews = reviews.filter(r => r.userId !== usuarioActual.id);
+                localStorage.setItem('reviews', JSON.stringify(updatedReviews));
+                
+                // Remove user's bookmarks
+                const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+                const updatedBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id);
+                localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+                
+                logout();
             }
         }
 

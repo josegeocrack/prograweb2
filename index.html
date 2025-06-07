@@ -129,6 +129,8 @@
                     <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">Qué bueno tenerte de vuelta.</h2>
                     <form id="login-form">
                         <div class="form-group">
+
+                            <!-- no se como cambiar el msj required-->
                             <label for="login-email">Mail</label>
                             <input type="email" id="login-email" required>
                         </div>
@@ -265,7 +267,7 @@
                 </div>
                 <div class="auth-container">
                     <div id="profile-info"></div>
-                    <button class="btn btn-danger" id="delete-account" style="width: 100%; margin-top: 2rem;">Delete Account</button>
+                    <button class="btn btn-danger" id="delete-account" style="width: 100%; margin-top: 2rem;">Borrar cuenta</button>
                 </div>
             </div>
         </div>
@@ -347,6 +349,18 @@
                     <button type="button" class="btn btn-secundario" id="cancel-review" style="flex: 1;">Cancelar</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="confirmation-title">Confirmar acción</h2>
+            <p id="confirmation-message"></p>
+            <div class="modal-actions">
+                <button id="confirmation-cancel" class="btn btn-secondary">Cancelar</button>
+                <button id="confirmation-confirm" class="btn btn-danger">Confirmar</button>
+            </div>
         </div>
     </div>
 
