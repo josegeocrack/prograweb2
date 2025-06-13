@@ -1,0 +1,73 @@
+<!-- Home View -->
+<div id="home-view" class="view">
+    <div class="page-header">
+        <h1 class="page-title">Últimas Reseñas</h1>
+        <p class="page-subtitle">Descubrí qué están pensando los demás y compartí tus opiniones con el resto de los usuarios !</p>
+    </div>
+    <div class="filter-bar">
+        <button class="btn-filtro active" data-genre="all">Todos</button>
+        <button class="btn-filtro" data-genre="Fiction">Ficción</button>
+        <button class="btn-filtro" data-genre="Mystery">Misterio</button>
+        <button class="btn-filtro" data-genre="Romance">Romance</button>
+        <button class="btn-filtro" data-genre="Sci-Fi">Ciencia Ficción</button>
+        <button class="btn-filtro" data-genre="Non-Fiction">Non-Fiction</button>
+    </div>
+    <div id="reviews-container" class="reviews-grid"></div>
+
+    <!-- Add Review Button -->
+    <button id="add-review-btn" class="btn btn-primario btn-floating">
+        <span>+</span>
+    </button>
+
+    <!-- Review Modal -->
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h2>Nueva Reseña</h2>
+            <form id="review-form">
+                <div class="form-group">
+                    <label for="book-title">Título del libro</label>
+                    <input type="text" id="book-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="book-genre">Género</label>
+                    <select id="book-genre" required>
+                        <option value="">Seleccionar género</option>
+                        <option value="Fiction">Ficción</option>
+                        <option value="Mystery">Misterio</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Sci-Fi">Ciencia Ficción</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Biography">Biografía</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div id="rating-stars" class="rating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="review-text">Reseña</label>
+                    <textarea id="review-text" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Imagen (opcional)</label>
+                    <div class="image-upload-container">
+                        <div id="image-preview" class="image-preview"></div>
+                        <input type="file" id="image-upload" accept="image/*">
+                        <button type="button" id="remove-image" class="btn btn-secundario" style="display: none;">Eliminar imagen</button>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-review" class="btn btn-secundario">Cancelar</button>
+                    <button type="submit" class="btn btn-primario">Publicar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 
