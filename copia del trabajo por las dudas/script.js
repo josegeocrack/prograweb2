@@ -9,12 +9,12 @@
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
-            updateAuthUI(); // Ensure nav bar is set correctly on first load
+            updateAuthUI(); 
             initializeApp();
             setupEventListeners();
             checkAuthState();
 
-            // Custom validation for login email
+            // cheuqeo el mail ue ingresa el usuario (validez, que tenga un arroba)
             const loginEmail = document.getElementById('login-email');
             if (loginEmail) {
                 loginEmail.addEventListener('invalid', function(e) {
@@ -29,7 +29,7 @@
                 });
             }
 
-            // Custom validation for signup email
+            // cheuqeo mail de registro
             const signupEmail = document.getElementById('signup-email');
             if (signupEmail) {
                 signupEmail.addEventListener('invalid', function(e) {
