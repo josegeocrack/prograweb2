@@ -1,55 +1,50 @@
-// para tener nav bars diferentes
- 
         let usuarioActual = null;
         let vistaActual = 'landing';
         let idResenaEditando = null;
         let filtroGeneroActual = 'all';
         let datosImagenCargada = null;
-        let opcionSubidaActual = 'upload';
+        let opcionSubidaActual = 'upload'; // por si sunbuis una foto
 
-        // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
-            updateAuthUI(); // Ensure nav bar is set correctly on first load
+            updateAuthUI();
             initializeApp();
             setupEventListeners();
             checkAuthState();
 
-            // Setup email validation for login and signup forms
+            // configura la validacion de mail para login y registro en base a la fx
             setupEmailValidation('login-email');
             setupEmailValidation('signup-email');
 
-            // Setup form field validation
+            // configura la validacion del formulario en base a la fx
             setupFieldValidation('review-text', "Por favor, completá este campo.");
             setupFieldValidation('book-genre', "Por favor, seleccioná un género de la lista.");
             setupFieldValidation('book-title', "Por favor, completá este campo.");
         });
 
         /**
-         * Sets up email validation for a given email input field
-         * @param {string} emailFieldId - The ID of the email input field
+         * configura la validacion de mail
+         * @param {string} emailFieldId - el id del campo de entrada de email
          */
         function setupEmailValidation(emailFieldId) {
             const emailField = document.getElementById(emailFieldId);
             if (emailField) {
-                emailField.addEventListener('invalid', function(e) {
+                emailField.addEventListener('invalid', function(e) { // el valor invalido lo tuneo
                     if (emailField.validity.typeMismatch) {
                         emailField.setCustomValidity("Por favor, incluí un '@' en la dirección de correo. Falta el '@' en el mail.");
                     } else {
                         emailField.setCustomValidity("");
                     }
-                });
+                }); 
                 emailField.addEventListener('input', function(e) {
                     emailField.setCustomValidity("");
                 });
             }
         }
-
         /**
-         * Sets up validation for form fields that require user input
-         * @param {string} fieldId - The ID of the form field
-         * @param {string} errorMessage - The error message to display when validation fails
+         * @param {string} fieldId - cuadrado del form
+         * @param {string} errorMessage - mensaje q queres tirar
          */
-        function setupFieldValidation(fieldId, errorMessage) {
+        function setupFieldValidation(fieldId, errorMessage) {          //para cualq cosa q mete el usuairo
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('invalid', function(e) {
@@ -65,16 +60,14 @@
             }
         }
 
-        function initializeApp() {
-            // Initialize localStorage if empty
+        function initializeApp() { // para crear los arrays en el local storage
             initializeLocalStorage(['users', 'reviews', 'bookmarks']);
         }
 
         /**
-         * Initializes localStorage items with empty arrays if they don't exist
-         * @param {string[]} items - Array of localStorage item names to initialize
+         * @param {string[]} items
          */
-        function initializeLocalStorage(items) {
+        function initializeLocalStorage(items) { //creo los arrays para manejar desp reservas y usuarios y guardados (en el local storage para q cada vez que abras la pag lo tengas en algun lado)
             items.forEach(item => {
                 if (!localStorage.getItem(item)) {
                     localStorage.setItem(item, JSON.stringify([]));
@@ -82,53 +75,51 @@
             });
         }
 
-        function setupEventListeners() {
-            // Logo click to return to landing page
+        function setupEventListeners() { //preparo los botones y los events que se ejecutan cuando los clickeo
+            //si estas iniciado sesion volver con logo (si no no hay vuelta al home)
             document.getElementById('logo-home').addEventListener('click', () => {
                 showView('landing');
             });
 
-            // Setup back to landing navigation
-            setupBackToLandingNavigation();
+            setupBackToLandingNavigation(); // para volver al home
 
-            // Setup navigation links
+            // para navegar en la nav bar
             setupNavigationLinks('.nav-link');
             setupNavigationLinks('.mobile-nav-link', true);
 
-            // Auth buttons
+            // para login y out
             document.getElementById('login-btn').addEventListener('click', () => showView('login'));
             document.getElementById('logout-btn').addEventListener('click', logout);
             setupAuthNavigationButtons();
 
-            // Forms
+            // para el de login y registro y reseñas
             document.getElementById('login-form').addEventListener('submit', handleLogin);
             document.getElementById('signup-form').addEventListener('submit', handleSignup);
             document.getElementById('review-form').addEventListener('submit', handleReviewSubmit);
 
-            // Modal
+            // para reseñas
             document.getElementById('add-review-btn').addEventListener('click', () => openReviewModal());
             document.getElementById('close-modal').addEventListener('click', closeReviewModal);
             document.getElementById('cancel-review').addEventListener('click', closeReviewModal);
 
-            // Rating stars
+            // estrellas de rating
             document.querySelectorAll('#rating-stars .star').forEach(star => {
                 star.addEventListener('click', (e) => {
                     const rating = parseInt(e.target.dataset.rating);
                     setRating(rating);
                 });
-                
-                // Add hover effect
+                // efecto a medida que te moves por las estrellas (que se apaguen y prendan)
                 star.addEventListener('mouseover', (e) => {
                     const rating = parseInt(e.target.dataset.rating);
                     hoverRating(rating);
                 });
-                
+                // cuando sacas el mouse, se apagan las estrellas
                 star.addEventListener('mouseout', () => {
                     resetRatingHover();
                 });
             });
 
-            // Genre filters
+            // filtros para los generos
             document.querySelectorAll('.btn-filtro').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const genre = e.target.dataset.genre;
@@ -136,7 +127,7 @@
                 });
             });
 
-            // Genre cards
+            // las fotos de los generos que son filtros de las resenias
             document.querySelectorAll('.genre-card').forEach(card => {
                 card.addEventListener('click', (e) => {
                     const genre = e.target.closest('.genre-card').dataset.genre;
@@ -145,16 +136,11 @@
                 });
             });
 
-            // Profile actions
             document.getElementById('delete-account').addEventListener('click', deleteAccount);
 
-            // Photo upload functionality
             setupPhotoUpload();
 
-            // Mobile menu toggle
-            document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
-
-            // Close mobile menu when clicking outside
+            document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu); //celu
             document.addEventListener('click', (e) => {
                 const mobileNav = document.getElementById('mobile-nav');
                 const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -166,9 +152,9 @@
         }
 
         /**
-         * Sets up back to landing navigation for multiple elements
+
          */
-        function setupBackToLandingNavigation() {
+        function setupBackToLandingNavigation() { //para volver al landing post cualq lugar
             const backToLandingSelectors = ['back-to-landing', 'back-to-landing-signup'];
             
             backToLandingSelectors.forEach(selector => {
@@ -182,17 +168,16 @@
             });
         }
 
-        /**
-         * Sets up navigation links with consistent behavior
-         * @param {string} selector - CSS selector for navigation links
-         * @param {boolean} isMobile - Whether these are mobile navigation links
+        /** //agarra todo lo que es de mobile
+         * @param {string} selector - css
+         * @param {boolean} isMobile - para saber si estas en el celular
          */
         function setupNavigationLinks(selector, isMobile = false) {
             document.querySelectorAll(selector).forEach(link => {
-                link.addEventListener('click', (e) => {
+                link.addEventListener('click', (e) => { //si clickeas cualq evento de mobile
                     e.preventDefault();
                     const view = e.target.dataset.view;
-                    if (usuarioActual) {
+                    if (usuarioActual) { //chequea que haya un usuario logueado
                         showView(view);
                         if (isMobile) {
                             closeMobileMenu();
@@ -203,7 +188,7 @@
         }
 
         /**
-         * Sets up authentication navigation buttons (show-signup, show-login)
+         * muestro boton de login o signup y te lleva a dde te tienen que llevar (su view correspndiernte)
          */
         function setupAuthNavigationButtons() {
             const authButtons = [
@@ -229,7 +214,7 @@
             const fileInput = document.getElementById('book-cover-file');
             const urlInput = document.getElementById('book-cover-url');
 
-            // Upload option switching
+            // segun si es url o si es archivo (para mostrar el boton mas prolijo)
             uploadOptions.forEach(option => {
                 option.addEventListener('click', () => {
                     uploadOptions.forEach(opt => opt.classList.remove('active'));
@@ -249,20 +234,17 @@
                 });
             });
 
-            // File upload
+            // subis archivo de foto pero de distintas formas
             uploadArea.addEventListener('click', () => {
                 fileInput.click();
             });
-
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 uploadArea.classList.add('dragover');
             });
-
             uploadArea.addEventListener('dragleave', () => {
                 uploadArea.classList.remove('dragover');
             });
-
             uploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
@@ -271,14 +253,12 @@
                     handleFileUpload(files[0]);
                 }
             });
-
             fileInput.addEventListener('change', (e) => {
                 if (e.target.files.length > 0) {
                     handleFileUpload(e.target.files[0]);
                 }
             });
-
-            // URL input
+            // con url
             urlInput.addEventListener('input', () => {
                 if (urlInput.value) {
                     showImagePreview(urlInput.value);
@@ -288,19 +268,15 @@
             });
         }
 
-        function handleFileUpload(file) {
-            // Validate file
+        function handleFileUpload(file) { //para ver la foto que se sube como archivo
             if (!file.type.startsWith('image/')) {
                 alert('Por favor seleccioná un archivo de imagen.');
                 return;
             }
-
-            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            if (file.size > 5 * 1024 * 1024) { // limite 5mb
                 alert('El archivo no debe tener más de 5MB.');
                 return;
             }
-
-            // Read file as base64
             const reader = new FileReader();
             reader.onload = (e) => {
                 datosImagenCargada = e.target.result;
@@ -309,7 +285,7 @@
             };
             reader.readAsDataURL(file);
         }
-
+//te muestra la foto que subio en un cuadrado chico abajo
         function showImagePreview(src) {
             const preview = document.getElementById('image-preview');
             const container = document.getElementById('image-preview-container');
@@ -344,22 +320,39 @@
         }
 
         function showView(viewName) {
-            // Hide all views by removing the 'active' class
+            // esconde todas las views porq les saca el active
             document.querySelectorAll('.view').forEach(view => {
                 view.classList.remove('active');
             });
 
-            // Show the selected view by adding the 'active' class
+            // muestra la view seleccionada
             const view = document.getElementById(`${viewName}-view`);
             if (view) {
                 view.classList.add('active');
             }
 
-            // Update navigation state
+            // cuando salis de login o signup
+            if (vistaActual === 'login' && viewName !== 'login') {
+                const loginForm = document.getElementById('login-form');
+                const validationMessage = loginForm.querySelector('.validation-message');
+                if (validationMessage) validationMessage.remove();
+            }
+             if (vistaActual === 'signup' && viewName !== 'signup') {
+                const signupForm = document.getElementById('signup-form');
+                const validationMessage = signupForm.querySelector('.validation-message');
+                if (validationMessage) validationMessage.remove();
+            }
+
+            // cuando volves a login o signup, resetea el formulario (para q no quede info guardada cada vez q entras)
+            if (viewName === 'login') {
+                document.getElementById('login-form').reset();
+            } else if (viewName === 'signup') {
+                document.getElementById('signup-form').reset();
+            }
+
             updateNavigation(viewName);
 
-            // Load data for the view
-            switch(viewName) {
+            switch(viewName) { //segun la vista cargo resenas
                 case 'home':
                     loadReviews();
                     break;
@@ -373,8 +366,6 @@
                     loadProfile();
                     break;
             }
-
-            // Apply custom validation
             applyCustomValidation();
         }
 
@@ -384,7 +375,6 @@
             const password = document.getElementById('login-password').value;
             const passwordGroup = document.getElementById('login-password').closest('.form-group');
 
-            // Remove any existing validation message
             const existingMessage = passwordGroup.querySelector('.validation-message');
             if (existingMessage) {
                 existingMessage.remove();
@@ -398,7 +388,6 @@
                 localStorage.setItem('usuarioActual', JSON.stringify(user));
                 updateAuthUI();
                 showView('home');
-                // Remove any lingering validation message after successful login
                 if (passwordGroup.querySelector('.validation-message')) {
                     passwordGroup.querySelector('.validation-message').remove();
                 }
@@ -416,8 +405,6 @@
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
             const emailGroup = document.getElementById('signup-email').closest('.form-group');
-
-            // Remove any existing validation message
             const existingMessage = emailGroup.querySelector('.validation-message');
             if (existingMessage) {
                 existingMessage.remove();
@@ -457,20 +444,20 @@
             showView('landing');
         }
 
-        function updateAuthUI() {
-            console.log('updateAuthUI called. usuarioActual:', usuarioActual);
+        function updateAuthUI() {             // actualizo la pagina segun si tenes un usuario logueado o no
+            //console.log('updateAuthUI called. usuarioActual:', usuarioActual); --> prueba
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
             const userName = document.getElementById('user-name');
             const addReviewBtn = document.getElementById('add-review-btn');
 
-            // Nav links (desktop)
+            // para pantalla norml veo asi el doc
             const navInicio = document.getElementById('nav-inicio');
             const navGeneros = document.getElementById('nav-generos');
             const navMisResenas = document.getElementById('nav-mis-resenas');
             const navResenasGuardadas = document.getElementById('nav-resenas-guardadas');
             const navPerfil = document.getElementById('nav-perfil');
-            // Nav links (mobile)
+            // para celu
             const mobileNavInicio = document.getElementById('mobile-nav-inicio');
             const mobileNavGeneros = document.getElementById('mobile-nav-generos');
             const mobileNavMisResenas = document.getElementById('mobile-nav-mis-resenas');
@@ -510,7 +497,7 @@
                 if (mobileNavPerfil) mobileNavPerfil.style.display = 'none';
             }
 
-            // Hide or show landing page buttons based on login state
+            // te muestro o no el boton de crear reseña o el de login (todo segun usuario logueado o no)
             const landingCreateBtn = document.querySelector('.hero-actions .btn-primario');
             const landingLoginBtn = document.querySelector('.hero-actions .btn-secundario');
             if (usuarioActual) {
@@ -521,7 +508,7 @@
                 if (landingLoginBtn) landingLoginBtn.style.display = '';
             }
 
-            // Hide or show mobile menu button and mobile nav based on login state
+            // para celu
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileNav = document.getElementById('mobile-nav');
             if (usuarioActual) {
@@ -538,12 +525,10 @@
             const modal = document.getElementById('review-modal');
             const title = document.getElementById('modal-title');
             
-            // Reset upload state
+            // reseteo el estado de subida de foto
             opcionSubidaActual = 'upload';
             datosImagenCargada = null;
             removeImage();
-            
-            // Reset upload options
             document.querySelectorAll('.upload-option').forEach(opt => opt.classList.remove('active'));
             document.querySelector('[data-option="upload"]').classList.add('active');
             document.getElementById('upload-area').style.display = 'block';
@@ -559,15 +544,14 @@
                     document.getElementById('review-text').value = review.text;
                     setRating(review.rating);
                     
-                    // Handle existing image
                     if (review.coverUrl) {
                         if (review.coverUrl.startsWith('data:')) {
-                            // It's an uploaded image
+                            // si es una imagen subida
                             datosImagenCargada = review.coverUrl;
                             showImagePreview(review.coverUrl);
                             document.getElementById('upload-area').classList.add('has-file');
                         } else {
-                            // It's a URL
+                            // si es una url
                             opcionSubidaActual = 'url';
                             document.querySelectorAll('.upload-option').forEach(opt => opt.classList.remove('active'));
                             document.querySelector('[data-option="url"]').classList.add('active');
@@ -585,8 +569,6 @@
             }
             
             modal.classList.add('active');
-
-            // Apply custom validation
             applyCustomValidation();
         }
 
@@ -633,8 +615,9 @@
                 }
             });
         }
+//todo para estrellas arriba
 
-        function handleReviewSubmit(e) {
+        function handleReviewSubmit(e) { //subida de reseña, validaciones y demas para subirl
             e.preventDefault();
             
             const title = document.getElementById('book-title').value;
@@ -642,14 +625,10 @@
             const rating = parseInt(document.getElementById('book-rating').value);
             const text = document.getElementById('review-text').value;
             const ratingGroup = document.getElementById('rating-stars').closest('.form-group');
-            
-            // Remove any existing validation message
             const existingMessage = ratingGroup.querySelector('.validation-message');
             if (existingMessage) {
                 existingMessage.remove();
             }
-            
-            // Get cover image
             let coverUrl = '';
             if (opcionSubidaActual === 'upload' && datosImagenCargada) {
                 coverUrl = datosImagenCargada;
@@ -760,7 +739,7 @@
             container.innerHTML = savedReviews.map(review => createReviewCard(review)).join('');
         }
 
-        function loadProfile() {
+        function loadProfile() { //parte del perfil, edito desde aca con dato y lo agrego al html
             const container = document.getElementById('profile-info');
             const reviews = JSON.parse(localStorage.getItem('reviews'));
             const userReviews = reviews.filter(r => r.userId === usuarioActual.id);
@@ -798,7 +777,7 @@
         }
 
         function createReviewCard(review, isOwner = false) {
-            const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+            const bookmarks = JSON.parse(localStorage.getItem('bookmarks')); //guardados
             const isBookmarked = bookmarks.some(b => b.userId === usuarioActual.id && b.reviewId === review.id);
             const dateFormatted = formatDate(review.createdAt);
             
@@ -833,7 +812,7 @@
             `;
         }
 
-        function formatDate(dateStr) {
+        function formatDate(dateStr) { //que las fechas esten ok 
             const date = new Date(dateStr);
             return date.toLocaleDateString("es-AR");
         }
@@ -907,24 +886,23 @@
                 'Borrar cuenta',
                 '¿Estás seguro de que querés borrar tu cuenta? Esta acción no es revertible.',
                 () => {
-                    // Remove user from users array
+                    // saco de la lista
                     const users = JSON.parse(localStorage.getItem('users')) || [];
                     const updatedUsers = users.filter(u => u.id !== usuarioActual.id);
                     localStorage.setItem('users', JSON.stringify(updatedUsers));
-                    // Remove user's reviews
+                    // saco sus reviews
                     const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
                     const updatedReviews = reviews.filter(r => r.userId !== usuarioActual.id);
                     localStorage.setItem('reviews', JSON.stringify(updatedReviews));
-                    // Remove user's bookmarks
+                    // idem guardados
                     const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
                     const updatedBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id);
                     localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
-                    // Log out
+                    // saco al usuario y vuelvo al landing
                     usuarioActual = null;
                     localStorage.removeItem('usuarioActual');
                     updateAuthUI();
                     showView('login');
-                    // Update landing stats to reflect the new user count
                     updateLandingStats();
                 }
             );
@@ -942,41 +920,30 @@
 
         function setGenreFilter(genre) {
             filtroGeneroActual = genre;
-
-            // Update filter buttons
             document.querySelectorAll('.btn-filtro').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`[data-genre="${genre}"]`).classList.add('active');
 
-            // Reload reviews with filter
+                        // recargas resenas con el filtro
             if (vistaActual === 'home') {
                 loadReviews();
             }
         }
 
-        function updateLandingStats() {
-            // Get the elements
+        function updateLandingStats() { //la pag principal (funciona pero no hay usuarios jeje)
             const totalUsersElem = document.getElementById('total-users');
             const totalReviewsElem = document.getElementById('total-reviews');
 
-            // Defensive: only update if elements exist
             if (!totalUsersElem || !totalReviewsElem) return;
-
-            // Get users and reviews from localStorage
             const users = JSON.parse(localStorage.getItem('users')) || [];
             const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
-
-            // Update the DOM
             totalUsersElem.textContent = users.length;
             totalReviewsElem.textContent = reviews.length;
         }
 
         function updateNavigation(viewName) {
-            // Update current view global variable
             vistaActual = viewName;
-
-            // Update active state for all navigation links (desktop and mobile)
             document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
                 link.classList.remove('active');
                 // The "genres" view should highlight the "Géneros" nav link
@@ -988,7 +955,7 @@
         }
 
         function applyCustomValidation() {
-            // Login email
+            //mail
             const loginEmail = document.getElementById('login-email');
             if (loginEmail) {
                 loginEmail.addEventListener('invalid', function(e) {
@@ -1004,7 +971,7 @@
                     loginEmail.setCustomValidity("");
                 });
             }
-            // Login password
+            //contra
             const loginPassword = document.getElementById('login-password');
             if (loginPassword) {
                 loginPassword.addEventListener('invalid', function(e) {
@@ -1018,7 +985,7 @@
                     loginPassword.setCustomValidity("");
                 });
             }
-            // Signup name
+            //  nombre
             const signupName = document.getElementById('signup-name');
             if (signupName) {
                 signupName.addEventListener('invalid', function(e) {
@@ -1032,7 +999,7 @@
                     signupName.setCustomValidity("");
                 });
             }
-            // Signup email
+            // mail registro
             const signupEmail = document.getElementById('signup-email');
             if (signupEmail) {
                 signupEmail.addEventListener('invalid', function(e) {
@@ -1048,7 +1015,7 @@
                     signupEmail.setCustomValidity("");
                 });
             }
-            // Signup password
+            // contra registro
             const signupPassword = document.getElementById('signup-password');
             if (signupPassword) {
                 signupPassword.addEventListener('invalid', function(e) {
@@ -1062,7 +1029,7 @@
                     signupPassword.setCustomValidity("");
                 });
             }
-            // Review textarea
+            // reseña
             const reviewText = document.getElementById('review-text');
             if (reviewText) {
                 reviewText.addEventListener('invalid', function(e) {
@@ -1076,7 +1043,7 @@
                     reviewText.setCustomValidity("");
                 });
             }
-            // Review genre
+            // genero
             const reviewGenre = document.getElementById('book-genre');
             if (reviewGenre) {
                 reviewGenre.addEventListener('invalid', function(e) {
@@ -1090,7 +1057,7 @@
                     reviewGenre.setCustomValidity("");
                 });
             }
-            // Book title
+            // titulo
             const bookTitle = document.getElementById('book-title');
             if (bookTitle) {
                 bookTitle.addEventListener('invalid', function(e) {

@@ -63,8 +63,8 @@
             font-size: 1.75rem;
             font-weight: 700;
             color: var(--primario);
-            cursor: pointer;
             position: relative;
+            cursor: pointer;
         }
 
         .logo::after {
