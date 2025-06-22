@@ -64,7 +64,6 @@
             font-weight: 700;
             color: var(--primario);
             position: relative;
-            cursor: pointer;
         }
 
         .logo::after {
