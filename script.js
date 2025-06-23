@@ -1,5 +1,5 @@
 // ========================================
-// VARIABLES GLOBALES
+// VARIABLES
 // ========================================
 
 let usuarioActual = null;
@@ -10,7 +10,7 @@ let datosImagenCargada = null;
 let opcionSubidaActual = 'upload'; // por si sunbuis una foto
 
 // ========================================
-// INICIALIZACIÓN DE LA APLICACIÓN
+// ARRANCA LA APP -- INICIALIZACIÓN
 // ========================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -33,9 +33,6 @@ function initializeApp() { // para crear los arrays en el local storage
     initializeLocalStorage(['users', 'reviews', 'bookmarks']);
 }
 
-/**
- * @param {string[]} items
- */
 function initializeLocalStorage(items) { //creo los arrays para manejar desp reservas y usuarios y guardados (en el local storage para q cada vez que abras la pag lo tengas en algun lado)
     items.forEach(item => {
         if (!localStorage.getItem(item)) {
@@ -45,7 +42,7 @@ function initializeLocalStorage(items) { //creo los arrays para manejar desp res
 }
 
 // ========================================
-// MANEJO DE EVENT LISTENERS
+// EVENT LISTENERS
 // ========================================
 
 function setupEventListeners() { //preparo los botones y los events que se ejecutan cuando los clickeo
@@ -125,7 +122,7 @@ function setupEventListeners() { //preparo los botones y los events que se ejecu
 }
 
 // ========================================
-// MANEJO DE AUTENTICACIÓN
+// AUTENTICACIÓN USUARIO
 // ========================================
 
 function checkAuthState() {
@@ -151,13 +148,22 @@ function handleLogin(e) {
         existingMessage.remove();
     }
 
+    //validación del usuario (existe ? contraseña correcta ?)
     const users = JSON.parse(localStorage.getItem('users'));
-    const user = users.find(u => u.email === email && u.password === password);
+    const user = users.find(u => u.email === email);
 
-    if (user) {
+    if (!user) {
+        const message = document.createElement('div');
+        message.className = 'validation-message show';
+        message.textContent = 'No se ha encontrado un usuario con ese mail';
+        passwordGroup.appendChild(message);
+        return;
+    }
+
+    if (user.password === password) {
         usuarioActual = user;
         localStorage.setItem('usuarioActual', JSON.stringify(user));
-        updateAuthUI();
+        updateAuthUI(); //actualiza la vista segun el usuario logueado o no
         showView('home');
         if (passwordGroup.querySelector('.validation-message')) {
             passwordGroup.querySelector('.validation-message').remove();
@@ -222,7 +228,7 @@ function updateAuthUI() {             // actualizo la pagina segun si tenes un u
     const userName = document.getElementById('user-name');
     const addReviewBtn = document.getElementById('add-review-btn');
 
-    // para pantalla norml veo asi el doc
+    // para pantalla norml
     const navInicio = document.getElementById('nav-inicio');
     const navGeneros = document.getElementById('nav-generos');
     const navMisResenas = document.getElementById('nav-mis-resenas');
@@ -233,11 +239,11 @@ function updateAuthUI() {             // actualizo la pagina segun si tenes un u
     const mobileNavGeneros = document.getElementById('mobile-nav-generos');
     const mobileNavMisResenas = document.getElementById('mobile-nav-mis-resenas');
     const mobileNavResenasGuardadas = document.getElementById('mobile-nav-resenas-guardadas');
-    const mobileNavPerfil = document.getElementById('mobile-nav-perfil');
+    const mobileNavPerfil = document.getElementById('mobile-nav-perfil'); //termino de agarrar botones a edtiar
 
-    if (usuarioActual) {
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'block';
+    if (usuarioActual) { //si hay un usuario logueado
+        loginBtn.style.display = 'none'; //saco esto
+        logoutBtn.style.display = 'block'; //pongo esto
         userName.style.display = 'block';
         userName.textContent = usuarioActual.name;
         if (addReviewBtn) addReviewBtn.style.display = 'flex';
@@ -252,7 +258,7 @@ function updateAuthUI() {             // actualizo la pagina segun si tenes un u
         if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = '';
         if (mobileNavPerfil) mobileNavPerfil.style.display = '';
     } else {
-        loginBtn.style.display = 'block';
+        loginBtn.style.display = 'block'; //pongo esto su no hay usuario logueado, asi puede iniciar sesion
         logoutBtn.style.display = 'none';
         userName.style.display = 'none';
         if (addReviewBtn) addReviewBtn.style.display = 'none';
@@ -319,7 +325,7 @@ function deleteAccount() {
 }
 
 // ========================================
-// MANEJO DE VISTAS Y NAVEGACIÓN
+// MANEJO DE VISTAS
 // ========================================
 
 function showView(viewName) {
@@ -372,9 +378,6 @@ function showView(viewName) {
     applyCustomValidation();
 }
 
-/**
- * 
- */
 function setupBackToLandingNavigation() { //para volver al landing post cualq lugar
     const backToLandingSelectors = ['back-to-landing', 'back-to-landing-signup'];
     
@@ -389,10 +392,6 @@ function setupBackToLandingNavigation() { //para volver al landing post cualq lu
     });
 }
 
-/** //agarra todo lo que es de mobile
- * @param {string} selector - css
- * @param {boolean} isMobile - para saber si estas en el celular
- */
 function setupNavigationLinks(selector, isMobile = false) {
     document.querySelectorAll(selector).forEach(link => {
         link.addEventListener('click', (e) => { //si clickeas cualq evento de mobile
@@ -408,10 +407,7 @@ function setupNavigationLinks(selector, isMobile = false) {
     });
 }
 
-/**
- * muestro boton de login o signup y te lleva a dde te tienen que llevar (su view correspndiernte)
- */
-function setupAuthNavigationButtons() {
+function setupAuthNavigationButtons() { //muestro boton de login o signup y te llevo a dde te tienen que llevar (su view correspndiernte)
     const authButtons = [
         { id: 'show-signup', view: 'signup' },
         { id: 'show-login', view: 'login' }
@@ -438,20 +434,18 @@ function closeMobileMenu() {
     mobileNav.classList.remove('active');
 }
 
-function updateNavigation(viewName) {
+function updateNavigation(viewName) { //lo agrego para cambiar el color de los renglones de cada secion en la nav bar
     vistaActual = viewName;
     document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
         link.classList.remove('active');
-        // The "genres" view should highlight the "Géneros" nav link
         const linkView = link.dataset.view === 'genres' ? 'genres' : link.dataset.view;
         if (linkView === viewName) {
             link.classList.add('active');
         }
     });
 }
-
 // ========================================
-// MANEJO DE RESEÑAS (CRUD)
+// MANEJO DE RESEÑAS
 // ========================================
 
 function openReviewModal(reviewId = null) {
@@ -717,7 +711,7 @@ function toggleBookmark(reviewId) {
 }
 
 // ========================================
-// MANEJO DE ARCHIVOS E IMÁGENES
+// ARCHIVOS Y FOTOS
 // ========================================
 
 function setupPhotoUpload() {
@@ -823,7 +817,7 @@ function removeImage() {
 }
 
 // ========================================
-// MANEJO DE RATING Y FILTROS
+// RATING (ESTRELLAS) Y FILTROS
 // ========================================
 
 function setRating(rating) {
@@ -870,7 +864,6 @@ function setGenreFilter(genre) {
         btn.classList.remove('active');
     });
     document.querySelector(`[data-genre="${genre}"]`).classList.add('active');
-
     // recargas resenas con el filtro
     if (vistaActual === 'home') {
         loadReviews();
@@ -878,13 +871,9 @@ function setGenreFilter(genre) {
 }
 
 // ========================================
-// UTILIDADES Y HELPERS
+// EXTRAS
 // ========================================
 
-/**
- * configura la validacion de mail
- * @param {string} emailFieldId - el id del campo de entrada de email
- */
 function setupEmailValidation(emailFieldId) {
     const emailField = document.getElementById(emailFieldId);
     if (emailField) {
@@ -901,16 +890,12 @@ function setupEmailValidation(emailFieldId) {
     }
 }
 
-/**
- * @param {string} fieldId - cuadrado del form
- * @param {string} errorMessage - mensaje q queres tirar
- */
-function setupFieldValidation(fieldId, errorMessage) {          //para cualq cosa q mete el usuairo
-    const field = document.getElementById(fieldId);
+function setupFieldValidation(fieldId, errorMessage) {          //los campos de la resena  (mete titulo obligatorio, etc)
+    const field = document.getElementById(fieldId); //cuadrado del form
     if (field) {
         field.addEventListener('invalid', function(e) {
             if (field.validity.valueMissing) {
-                field.setCustomValidity(errorMessage);
+                field.setCustomValidity(errorMessage); //mensaje q queres tirar
             } else {
                 field.setCustomValidity("");
             }
@@ -921,7 +906,7 @@ function setupFieldValidation(fieldId, errorMessage) {          //para cualq cos
     }
 }
 
-function loadProfile() { //parte del perfil, edito desde aca con dato y lo agrego al html
+function loadProfile() { // perfil, edito desde aca con dato y lo agrego al html
     const container = document.getElementById('profile-info');
     const reviews = JSON.parse(localStorage.getItem('reviews'));
     const userReviews = reviews.filter(r => r.userId === usuarioActual.id);
@@ -963,7 +948,7 @@ function formatDate(dateStr) { //que las fechas esten ok
     return date.toLocaleDateString("es-AR");
 }
 
-function showConfirmationModal(title, message, onConfirm) {
+function showConfirmationModal(title, message, onConfirm) { //cartel confirmación
     const modal = document.getElementById('confirmation-modal');
     const modalTitle = document.getElementById('confirmation-title');
     const modalMessage = document.getElementById('confirmation-message');
@@ -1002,7 +987,7 @@ function updateLandingStats() { //la pag principal (funciona pero no hay usuario
     totalReviewsElem.textContent = reviews.length;
 }
 
-function applyCustomValidation() {
+function applyCustomValidation() { //para que los campos no esten en ingles
     //mail
     const loginEmail = document.getElementById('login-email');
     if (loginEmail) {
