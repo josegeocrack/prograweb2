@@ -639,13 +639,17 @@ function createReviewCard(review, isOwner = false) {
     const isBookmarked = bookmarks.some(b => b.userId === usuarioActual.id && b.reviewId === review.id);
     const dateFormatted = formatDate(review.createdAt);
     
+    // Determinar si es la reseña del usuario actual
+    const isCurrentUser = review.userId === usuarioActual.id;
+    const authorText = isCurrentUser ? 'Por mi' : `Por @${review.userName}`;
+    
     return `
         <div class="review-card">
             <div class="review-header">
                 <div class="book-info">
                     <h3>${review.title}</h3>
                     <div class="review-meta">
-                        By ${review.userName} • ${review.genre} • ${dateFormatted}
+                        ${authorText} • ${review.genre} • ${dateFormatted}
                     </div>
                     <div class="star-rating">
                         ${Array.from({length: 5}, (_, i) => 
