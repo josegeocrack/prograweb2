@@ -212,6 +212,8 @@ function handleSignup(e) {
     localStorage.setItem('usuarioActual', JSON.stringify(newUser));
     updateAuthUI();
     showView('home');
+    // Actualizar estadísticas del landing page
+    updateLandingStats();
 }
 
 function logout() {
@@ -567,6 +569,9 @@ function handleReviewSubmit(e) { //subida de reseña, validaciones y demas para 
     localStorage.setItem('reviews', JSON.stringify(reviews));
     closeReviewModal();
     
+    // Actualizar estadísticas del landing page
+    updateLandingStats();
+    
     if (isEditing) {
         showView(vistaActual);
     } else {
@@ -683,6 +688,8 @@ function deleteReview(reviewId) {
             const newReviews = reviews.filter(r => r.id !== reviewId);
             localStorage.setItem('reviews', JSON.stringify(newReviews));
             loadMyReviews();
+            // Actualizar estadísticas del landing page
+            updateLandingStats();
         }
     );
 }
