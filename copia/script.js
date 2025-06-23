@@ -540,7 +540,6 @@ function handleReviewSubmit(e) { //subida de reseña, validaciones y demas para 
     }
 
     const reviews = JSON.parse(localStorage.getItem('reviews'));
-    const isEditing = !!idResenaEditando;
     
     if (idResenaEditando) {
         const reviewIndex = reviews.findIndex(r => r.id === idResenaEditando);
@@ -572,12 +571,7 @@ function handleReviewSubmit(e) { //subida de reseña, validaciones y demas para 
 
     localStorage.setItem('reviews', JSON.stringify(reviews));
     closeReviewModal();
-    
-    if (isEditing) {
-        showView(vistaActual);
-    } else {
-        showView('home');
-    }
+    showView('home');
 }
 
 function loadReviews() {
@@ -684,7 +678,7 @@ function deleteReview(reviewId) {
             const reviews = JSON.parse(localStorage.getItem('reviews'));
             const newReviews = reviews.filter(r => r.id !== reviewId);
             localStorage.setItem('reviews', JSON.stringify(newReviews));
-            loadMyReviews();
+            showView('home');
         }
     );
 }
@@ -708,11 +702,7 @@ function toggleBookmark(reviewId) {
             bookmarks.push(newBookmark);
             localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
         }
-        if (vistaActual === 'saved-reviews') {
-            loadSavedReviews();
-        } else {
-            loadReviews();
-        }
+        showView('home');
     }
 }
 
@@ -802,9 +792,9 @@ function handleFileUpload(file) { //para ver la foto que se sube como archivo
 
 //te muestra la foto que subio en un cuadrado chico abajo
 function showImagePreview(src) {
-    //const preview = document.getElementById('preview-img');
-    const preview = document.getElementById('image-preview');
+    const preview = document.getElementById('preview-img');
     const container = document.getElementById('image-preview-container');
+    
     preview.src = src;
     container.style.display = 'block';
 }

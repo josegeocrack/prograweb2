@@ -128,6 +128,53 @@ function setupEventListeners() { //preparo los botones y los events que se ejecu
 // MANEJO DE AUTENTICACIÓN
 // ========================================
 
+function showValidationMessage(groupElement, message) {
+    const existingMessage = groupElement.querySelector('.validation-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    const messageEl = document.createElement('div');
+    messageEl.className = 'validation-message show';
+    messageEl.textContent = message;
+    groupElement.appendChild(messageEl);
+}
+
+const Auth = {
+    login: function(email, password) {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (user) {
+            usuarioActual = user;
+            localStorage.setItem('usuarioActual', JSON.stringify(user));
+            return { success: true };
+        }
+        return { success: false, message: 'Contraseña incorrecta' };
+    },
+    signup: function(name, email, password) {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        if (users.find(u => u.email === email)) {
+            return { success: false, message: 'Ese mail ya existe' };
+        }
+        const newUser = {
+            id: Date.now().toString(),
+            name,
+            email,
+            password,
+            createdAt: new Date().toISOString()
+        };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        usuarioActual = newUser;
+        localStorage.setItem('usuarioActual', JSON.stringify(newUser));
+        return { success: true };
+    },
+    logout: function() {
+        usuarioActual = null;
+        localStorage.removeItem('usuarioActual');
+    }
+};
+
 function checkAuthState() {
     const savedUser = localStorage.getItem('usuarioActual');
     if (savedUser) {
@@ -146,27 +193,17 @@ function handleLogin(e) {
     const password = document.getElementById('login-password').value;
     const passwordGroup = document.getElementById('login-password').closest('.form-group');
 
-    const existingMessage = passwordGroup.querySelector('.validation-message');
-    if (existingMessage) {
-        existingMessage.remove();
-    }
+    const result = Auth.login(email, password);
 
-    const users = JSON.parse(localStorage.getItem('users'));
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-        usuarioActual = user;
-        localStorage.setItem('usuarioActual', JSON.stringify(user));
+    if (result.success) {
         updateAuthUI();
         showView('home');
-        if (passwordGroup.querySelector('.validation-message')) {
-            passwordGroup.querySelector('.validation-message').remove();
+        const existingMessage = passwordGroup.querySelector('.validation-message');
+        if (existingMessage) {
+            existingMessage.remove();
         }
     } else {
-        const message = document.createElement('div');
-        message.className = 'validation-message show';
-        message.textContent = 'Contraseña incorrecta';
-        passwordGroup.appendChild(message);
+        showValidationMessage(passwordGroup, result.message);
     }
 }
 
@@ -176,119 +213,58 @@ function handleSignup(e) {
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
     const emailGroup = document.getElementById('signup-email').closest('.form-group');
-    const existingMessage = emailGroup.querySelector('.validation-message');
-    if (existingMessage) {
-        existingMessage.remove();
+
+    const result = Auth.signup(name, email, password);
+
+    if (result.success) {
+        updateAuthUI();
+        showView('home');
+    } else {
+        showValidationMessage(emailGroup, result.message);
     }
-
-    const users = JSON.parse(localStorage.getItem('users'));
-    
-    if (users.find(u => u.email === email)) {
-        const message = document.createElement('div');
-        message.className = 'validation-message show';
-        message.textContent = 'Ese mail ya existe';
-        emailGroup.appendChild(message);
-        return;
-    }
-
-    const newUser = {
-        id: Date.now().toString(),
-        name,
-        email,
-        password,
-        createdAt: new Date().toISOString()
-    };
-
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-
-    usuarioActual = newUser;
-    localStorage.setItem('usuarioActual', JSON.stringify(newUser));
-    updateAuthUI();
-    showView('home');
 }
 
 function logout() {
-    usuarioActual = null;
-    localStorage.removeItem('usuarioActual');
+    Auth.logout();
     updateAuthUI();
     showView('landing');
 }
 
-function updateAuthUI() {             // actualizo la pagina segun si tenes un usuario logueado o no
-    //console.log('updateAuthUI called. usuarioActual:', usuarioActual); --> prueba
-    const loginBtn = document.getElementById('login-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const userName = document.getElementById('user-name');
-    const addReviewBtn = document.getElementById('add-review-btn');
+function toggleElementVisibility(selectors, show, displayType = 'block') {
+    selectors.forEach(selector => {
+        const element = document.getElementById(selector);
+        if (element) {
+            element.style.display = show ? displayType : 'none';
+        }
+    });
+}
 
-    // para pantalla norml veo asi el doc
-    const navInicio = document.getElementById('nav-inicio');
-    const navGeneros = document.getElementById('nav-generos');
-    const navMisResenas = document.getElementById('nav-mis-resenas');
-    const navResenasGuardadas = document.getElementById('nav-resenas-guardadas');
-    const navPerfil = document.getElementById('nav-perfil');
-    // para celu
-    const mobileNavInicio = document.getElementById('mobile-nav-inicio');
-    const mobileNavGeneros = document.getElementById('mobile-nav-generos');
-    const mobileNavMisResenas = document.getElementById('mobile-nav-mis-resenas');
-    const mobileNavResenasGuardadas = document.getElementById('mobile-nav-resenas-guardadas');
-    const mobileNavPerfil = document.getElementById('mobile-nav-perfil');
+function updateAuthUI() {
+    const loggedIn = !!usuarioActual;
+    const navItems = ['nav-inicio', 'nav-generos', 'nav-mis-resenas', 'nav-resenas-guardadas', 'nav-perfil'];
+    const mobileNavItems = ['mobile-nav-inicio', 'mobile-nav-generos', 'mobile-nav-mis-resenas', 'mobile-nav-resenas-guardadas', 'mobile-nav-perfil'];
 
-    if (usuarioActual) {
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'block';
-        userName.style.display = 'block';
-        userName.textContent = usuarioActual.name;
-        if (addReviewBtn) addReviewBtn.style.display = 'flex';
-        if (navInicio) navInicio.style.display = '';
-        if (navGeneros) navGeneros.style.display = '';
-        if (navMisResenas) navMisResenas.style.display = '';
-        if (navResenasGuardadas) navResenasGuardadas.style.display = '';
-        if (navPerfil) navPerfil.style.display = '';
-        if (mobileNavInicio) mobileNavInicio.style.display = '';
-        if (mobileNavGeneros) mobileNavGeneros.style.display = '';
-        if (mobileNavMisResenas) mobileNavMisResenas.style.display = '';
-        if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = '';
-        if (mobileNavPerfil) mobileNavPerfil.style.display = '';
-    } else {
-        loginBtn.style.display = 'block';
-        logoutBtn.style.display = 'none';
-        userName.style.display = 'none';
-        if (addReviewBtn) addReviewBtn.style.display = 'none';
-        if (navInicio) navInicio.style.display = 'none';
-        if (navGeneros) navGeneros.style.display = 'none';
-        if (navMisResenas) navMisResenas.style.display = 'none';
-        if (navResenasGuardadas) navResenasGuardadas.style.display = 'none';
-        if (navPerfil) navPerfil.style.display = 'none';
-        if (mobileNavInicio) mobileNavInicio.style.display = 'none';
-        if (mobileNavGeneros) mobileNavGeneros.style.display = 'none';
-        if (mobileNavMisResenas) mobileNavMisResenas.style.display = 'none';
-        if (mobileNavResenasGuardadas) mobileNavResenasGuardadas.style.display = 'none';
-        if (mobileNavPerfil) mobileNavPerfil.style.display = 'none';
+    toggleElementVisibility(['login-btn'], !loggedIn);
+    toggleElementVisibility(['logout-btn', 'user-name'], loggedIn);
+    
+    if (loggedIn) {
+        const userName = document.getElementById('user-name');
+        if (userName) userName.textContent = usuarioActual.name;
     }
 
+    toggleElementVisibility(['add-review-btn'], loggedIn, 'flex');
+
+    toggleElementVisibility(navItems, loggedIn, '');
+    toggleElementVisibility(mobileNavItems, loggedIn, '');
+    
     // te muestro o no el boton de crear reseña o el de login (todo segun usuario logueado o no)
     const landingCreateBtn = document.querySelector('.hero-actions .btn-primario');
     const landingLoginBtn = document.querySelector('.hero-actions .btn-secundario');
-    if (usuarioActual) {
-        if (landingCreateBtn) landingCreateBtn.style.display = 'none';
-        if (landingLoginBtn) landingLoginBtn.style.display = 'none';
-    } else {
-        if (landingCreateBtn) landingCreateBtn.style.display = '';
-        if (landingLoginBtn) landingLoginBtn.style.display = '';
-    }
+    if (landingCreateBtn) landingCreateBtn.style.display = loggedIn ? 'none' : '';
+    if (landingLoginBtn) landingLoginBtn.style.display = loggedIn ? 'none' : '';
 
     // para celu
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileNav = document.getElementById('mobile-nav');
-    if (usuarioActual) {
-        if (mobileMenuBtn) mobileMenuBtn.style.display = '';
-        if (mobileNav) mobileNav.style.display = '';
-    } else {
-        if (mobileMenuBtn) mobileMenuBtn.style.display = 'none';
-        if (mobileNav) mobileNav.style.display = 'none';
-    }
+    toggleElementVisibility(['mobile-menu-btn', 'mobile-nav'], loggedIn, '');
 }
 
 function deleteAccount() {
@@ -321,6 +297,13 @@ function deleteAccount() {
 // ========================================
 // MANEJO DE VISTAS Y NAVEGACIÓN
 // ========================================
+
+const viewLoadActions = {
+    'home': loadReviews,
+    'my-reviews': loadMyReviews,
+    'saved-reviews': loadSavedReviews,
+    'profile': loadProfile,
+};
 
 function showView(viewName) {
     // esconde todas las views porq les saca el active
@@ -355,20 +338,11 @@ function showView(viewName) {
 
     updateNavigation(viewName);
 
-    switch(viewName) { //segun la vista cargo resenas
-        case 'home':
-            loadReviews();
-            break;
-        case 'my-reviews':
-            loadMyReviews();
-            break;
-        case 'saved-reviews':
-            loadSavedReviews();
-            break;
-        case 'profile':
-            loadProfile();
-            break;
+    const loadAction = viewLoadActions[viewName];
+    if (loadAction) {
+        loadAction();
     }
+    
     applyCustomValidation();
 }
 
@@ -454,6 +428,71 @@ function updateNavigation(viewName) {
 // MANEJO DE RESEÑAS (CRUD)
 // ========================================
 
+const ReviewManager = {
+    _get: (item) => JSON.parse(localStorage.getItem(item)) || [],
+    _set: (item, data) => localStorage.setItem(item, JSON.stringify(data)),
+    
+    get: (id) => ReviewManager._get('reviews').find(r => r.id === id),
+
+    getAll: () => ReviewManager._get('reviews'),
+
+    getFiltered: (filterFn) => ReviewManager.getAll().filter(filterFn),
+
+    add: function(reviewData) {
+        const reviews = this.getAll();
+        const newReview = {
+            id: Date.now().toString(),
+            ...reviewData,
+            userId: usuarioActual.id,
+            userName: usuarioActual.name,
+            createdAt: new Date().toISOString()
+        };
+        reviews.unshift(newReview);
+        this._set('reviews', reviews);
+    },
+
+    update: function(id, reviewData) {
+        const reviews = this.getAll();
+        const reviewIndex = reviews.findIndex(r => r.id === id);
+        if (reviewIndex !== -1) {
+            reviews[reviewIndex] = {
+                ...reviews[reviewIndex],
+                ...reviewData,
+                updatedAt: new Date().toISOString()
+            };
+            this._set('reviews', reviews);
+        }
+    },
+
+    delete: function(id) {
+        const reviews = this.getAll().filter(r => r.id !== id);
+        this._set('reviews', reviews);
+    },
+
+    isBookmarked: function(reviewId) {
+        if (!usuarioActual) return false;
+        const bookmarks = this._get('bookmarks');
+        return bookmarks.some(b => b.userId === usuarioActual.id && b.reviewId === reviewId);
+    },
+    
+    toggleBookmark: function(reviewId) {
+        if (!usuarioActual) return;
+        let bookmarks = this._get('bookmarks');
+        const bookmarkIndex = bookmarks.findIndex(b => b.userId === usuarioActual.id && b.reviewId === reviewId);
+
+        if (bookmarkIndex > -1) {
+            bookmarks.splice(bookmarkIndex, 1);
+        } else {
+            bookmarks.push({
+                id: Date.now().toString(),
+                userId: usuarioActual.id,
+                reviewId
+            });
+        }
+        this._set('bookmarks', bookmarks);
+    }
+};
+
 function openReviewModal(reviewId = null) {
     idResenaEditando = reviewId;
     const modal = document.getElementById('review-modal');
@@ -470,8 +509,7 @@ function openReviewModal(reviewId = null) {
     
     if (reviewId) {
         title.textContent = 'Editar Reseña';
-        const reviews = JSON.parse(localStorage.getItem('reviews'));
-        const review = reviews.find(r => r.id === reviewId);
+        const review = ReviewManager.get(reviewId);
         if (review) {
             document.getElementById('book-title').value = review.title;
             document.getElementById('book-genre').value = review.genre;
@@ -532,64 +570,36 @@ function handleReviewSubmit(e) { //subida de reseña, validaciones y demas para 
     }
 
     if (rating === 0) {
-        const message = document.createElement('div');
-        message.className = 'validation-message show';
-        message.textContent = 'Por favor seleccioná un rating';
-        ratingGroup.appendChild(message);
+        showValidationMessage(ratingGroup, 'Por favor seleccioná un rating');
         return;
     }
 
-    const reviews = JSON.parse(localStorage.getItem('reviews'));
-    const isEditing = !!idResenaEditando;
+    const reviewData = { title, genre, rating, text, coverUrl };
     
     if (idResenaEditando) {
-        const reviewIndex = reviews.findIndex(r => r.id === idResenaEditando);
-        if (reviewIndex !== -1) {
-            reviews[reviewIndex] = {
-                ...reviews[reviewIndex],
-                title,
-                genre,
-                rating,
-                text,
-                coverUrl,
-                updatedAt: new Date().toISOString()
-            };
-        }
+        ReviewManager.update(idResenaEditando, reviewData);
     } else {
-        const newReview = {
-            id: Date.now().toString(),
-            title,
-            genre,
-            rating,
-            text,
-            coverUrl,
-            userId: usuarioActual.id,
-            userName: usuarioActual.name,
-            createdAt: new Date().toISOString()
-        };
-        reviews.unshift(newReview);
+        ReviewManager.add(reviewData);
     }
 
-    localStorage.setItem('reviews', JSON.stringify(reviews));
     closeReviewModal();
-    
-    if (isEditing) {
-        showView(vistaActual);
+    // Refresh the current view to show the new/updated review
+    if (vistaActual === 'my-reviews') {
+        loadMyReviews();
     } else {
-        showView('home');
+        loadReviews();
     }
 }
 
 function loadReviews() {
-    const reviews = JSON.parse(localStorage.getItem('reviews'));
+    let reviews = ReviewManager.getAll();
     const container = document.getElementById('reviews-container');
     
-    let filteredReviews = reviews;
     if (filtroGeneroActual !== 'all') {
-        filteredReviews = reviews.filter(r => r.genre === filtroGeneroActual);
+        reviews = reviews.filter(r => r.genre === filtroGeneroActual);
     }
 
-    if (filteredReviews.length === 0) {
+    if (reviews.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 <h3>Ninguna reseña encontrada.</h3>
@@ -599,12 +609,11 @@ function loadReviews() {
         return;
     }
 
-    container.innerHTML = filteredReviews.map(review => createReviewCard(review)).join('');
+    container.innerHTML = reviews.map(review => createReviewCard(review)).join('');
 }
 
 function loadMyReviews() {
-    const reviews = JSON.parse(localStorage.getItem('reviews'));
-    const myReviews = reviews.filter(r => r.userId === usuarioActual.id);
+    const myReviews = ReviewManager.getFiltered(r => r.userId === usuarioActual.id);
     const container = document.getElementById('my-reviews-container');
 
     if (myReviews.length === 0) {
@@ -621,10 +630,10 @@ function loadMyReviews() {
 }
 
 function loadSavedReviews() {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-    const userBookmarks = bookmarks.filter(b => b.userId === usuarioActual.id);
-    const reviews = JSON.parse(localStorage.getItem('reviews'));
-    const savedReviews = reviews.filter(r => userBookmarks.some(b => b.reviewId === r.id));
+    const bookmarkedIds = ReviewManager._get('bookmarks')
+        .filter(b => b.userId === usuarioActual.id)
+        .map(b => b.reviewId);
+    const savedReviews = ReviewManager.getFiltered(r => bookmarkedIds.includes(r.id));
     const container = document.getElementById('saved-reviews-container');
 
     if (savedReviews.length === 0) {
@@ -641,8 +650,7 @@ function loadSavedReviews() {
 }
 
 function createReviewCard(review, isOwner = false) {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarks')); //guardados
-    const isBookmarked = bookmarks.some(b => b.userId === usuarioActual.id && b.reviewId === review.id);
+    const isBookmarked = ReviewManager.isBookmarked(review.id);
     const dateFormatted = formatDate(review.createdAt);
     
     return `
@@ -681,37 +689,30 @@ function deleteReview(reviewId) {
         'Borrar reseña',
         '¿Estás seguro de que querés borrar esta reseña?',
         () => {
-            const reviews = JSON.parse(localStorage.getItem('reviews'));
-            const newReviews = reviews.filter(r => r.id !== reviewId);
-            localStorage.setItem('reviews', JSON.stringify(newReviews));
+            ReviewManager.delete(reviewId);
             loadMyReviews();
         }
     );
 }
 
 function toggleBookmark(reviewId) {
-    const reviews = JSON.parse(localStorage.getItem('reviews'));
-    const reviewIndex = reviews.findIndex(r => r.id === reviewId);
-    if (reviewIndex !== -1) {
-        const review = reviews[reviewIndex];
-        const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
-        const isBookmarked = bookmarks.some(b => b.userId === usuarioActual.id && b.reviewId === review.id);
-        if (isBookmarked) {
-            const newBookmarks = bookmarks.filter(b => b.userId !== usuarioActual.id || b.reviewId !== review.id);
-            localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
-        } else {
-            const newBookmark = {
-                id: Date.now().toString(),
-                userId: usuarioActual.id,
-                reviewId: review.id
-            };
-            bookmarks.push(newBookmark);
-            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-        }
-        if (vistaActual === 'saved-reviews') {
-            loadSavedReviews();
-        } else {
-            loadReviews();
+    ReviewManager.toggleBookmark(reviewId);
+
+    // Refresh the view to reflect the change
+    if (vistaActual === 'saved-reviews') {
+        loadSavedReviews();
+    } else if (vistaActual === 'home') {
+        loadReviews();
+    } else {
+        // Find the specific card and update it to avoid full reload
+        const card = document.querySelector(`[onclick="toggleBookmark('${reviewId}')"]`).closest('.review-card');
+        if (card) {
+            const isBookmarked = ReviewManager.isBookmarked(reviewId);
+            const button = card.querySelector('.bookmark-btn');
+            if (button) {
+                button.classList.toggle('bookmarked', isBookmarked);
+                button.innerHTML = `${isBookmarked ? '★' : '☆'} ${isBookmarked ? 'Saved' : 'Save'}`;
+            }
         }
     }
 }
@@ -802,9 +803,9 @@ function handleFileUpload(file) { //para ver la foto que se sube como archivo
 
 //te muestra la foto que subio en un cuadrado chico abajo
 function showImagePreview(src) {
-    //const preview = document.getElementById('preview-img');
-    const preview = document.getElementById('image-preview');
+    const preview = document.getElementById('preview-img');
     const container = document.getElementById('image-preview-container');
+    
     preview.src = src;
     container.style.display = 'block';
 }
